@@ -1,28 +1,5 @@
 import java.util.*;
 
-class Instruction {
-    String name;
-    List<String> args = new ArrayList<>();
-
-    Instruction(String name, String... args) {
-        this.name = name;
-        Collections.addAll(this.args, args);
-    }
-}
-
-class Program {
-    int numRows;
-    int numCols;
-    List<List<Instruction>> silos = new ArrayList<>();
-    List<Stream> streams = new ArrayList<>();
-}
-
-class Stream {
-    //String streamType;
-    int[] output;
-    int[] input;
-}
-
 class Parser {
     public static Program parse(String[] lines) {
         Program program = new Program();
