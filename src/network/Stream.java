@@ -8,7 +8,9 @@ public class Stream {
     private final int col;
     private final boolean isInput;
     private final List<Integer> values;
-    private int currentIndex;
+    private int currentIndex;{
+
+    }
 
     public Stream(int row, int col, boolean isInput) {
         this.row = row;

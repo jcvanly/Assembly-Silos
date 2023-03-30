@@ -40,8 +40,8 @@ public class Main {
         List<Instruction> instructions3 = parser.parse(program3);
 
         // Test program for silo4
-        String program4 = "NOOP";
-        List<Instruction> instructions4 = parser.parse(program4);
+//        String program4 = "NOOP";
+//        List<Instruction> instructions4 = parser.parse(program4);
 
         // Create interpreters for each network.SiloState
         Interpreter interpreter1 = new Interpreter(siloState1, instructions1);
