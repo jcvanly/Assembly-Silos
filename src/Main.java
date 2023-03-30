@@ -1,9 +1,8 @@
-import java.sql.SQLOutput;
 import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        String code = "1 2\n" + "ADD 1\n" + "MOVE ACC RIGHT\n" + "END\n" +
+        String code = "1 2\n" + "ADD 1\n" + "MOVE ACC RIGHT\n" + "ADD\n" + "END\n" +
                 "ADD 10\n" + "SAVE\n" + "MOVE LEFT ACC\n" + "END\n" +
                 "INPUT -1 1 10 11 12 13 END OUTPUT 1 1 END";
 
@@ -21,7 +20,8 @@ public class Main {
 
         System.out.println("\nStreams:");
         for (Stream stream : program.streams) {
-            System.out.print("  " + stream.streamType + " " + Arrays.toString(stream.coords));
+            System.out.print("  " + "INPUT" + "  " + Arrays.toString(stream.input));
+            System.out.print("\n  OUTPUT " + Arrays.toString(stream.output));
             System.out.println();
         }
     }

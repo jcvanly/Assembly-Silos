@@ -1,6 +1,4 @@
-import java.sql.SQLOutput;
 import java.util.*;
-import java.util.regex.*;
 
 class Instruction {
     String name;
@@ -20,9 +18,9 @@ class Program {
 }
 
 class Stream {
-    String streamType;
-    int[] coords;
-    int[] values;
+    //String streamType;
+    int[] output;
+    int[] input;
 }
 
 class Parser {
@@ -36,6 +34,7 @@ class Parser {
         program.numCols = numCols;
 
         int lineIdx = 1;
+
         for (int siloIdx = 0; siloIdx < numRows * numCols; siloIdx++) {
             List<Instruction> siloInstructions = new ArrayList<>();
             while (!lines[lineIdx].equals("END")) {
@@ -48,41 +47,37 @@ class Parser {
             lineIdx++; // Move past the "END" line
         }
 
-        // System.out.println(lineIdx + " " + lines.length);
-        //System.out.println(lines[lineIdx]);
         // Parse streams
         while (lineIdx < lines.length) {
             String[] streamParts = lines[lineIdx].split(" ");
             Stream stream = new Stream();
-            stream.streamType = streamParts[0];
-            int coord1 = Integer.parseInt(streamParts[1]);
-            int coord2 = Integer.parseInt(streamParts[2]);
-            stream.coords = new int[] {coord1, coord2};
-            //lineIdx++;
-
-            if (stream.streamType.equals("INPUT")) {
-                List<Integer> values = new ArrayList<>();
+                List<Integer> inputValues = new ArrayList<>();
+                List<Integer> outputValues = new ArrayList<>();
                 String[] valueParts = lines[lineIdx].split(" ");
 
-                for (String valuePart : valueParts) {
-                    if (!valuePart.equals("END"))
-                    {
-                        if(valuePart.equals("INPUT"))
-                        {
+                for (int i = 0; i < valueParts.length; i++) {
+                    String valuePart = valueParts[i];
+
+                    if (!valuePart.equals("END")) {
+                        if (valuePart.equals("INPUT")) {
                             continue;
                         }
-
-                        //System.out.println(Integer.parseInt(valuePart));
-                        //System.out.println(valuePart);
-                        values.add(Integer.parseInt(valuePart));
+                        inputValues.add(Integer.parseInt(valuePart));
                     }
+
                     else
                     {
+                        for(int j = i+2; j < valueParts.length-1; j++)
+                        {
+                            outputValues.add(Integer.parseInt(valueParts[j]));
+                        }
                         break;
                     }
                 }
-                stream.values = values.stream().mapToInt(Integer::intValue).toArray();
-            }
+
+                stream.input = inputValues.stream().mapToInt(Integer::intValue).toArray();
+                stream.output = outputValues.stream().mapToInt(Integer::intValue).toArray();
+
             program.streams.add(stream);
             lineIdx++; // Move past the "END" line
         }
