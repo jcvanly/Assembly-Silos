@@ -2,10 +2,7 @@ package main;
 
 import commands.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Parser {
     private final Map<String, InstructionFactory> instructionFactories;
@@ -83,4 +80,74 @@ public class Parser {
     private interface InstructionFactory {
         Instruction create(String[] tokens);
     }
+
+    public static class InputFileData {
+        public int numRows;
+        public int numCols;
+        public List<List<Instruction>> siloInstructions;
+        public List<Integer> inputStream;
+        public List<int[]> outputStream;
+
+        public InputFileData(int numRows, int numCols, List<List<Instruction>> siloInstructions,
+                          List<Integer> inputStream, List<int[]> outputStream) {
+            this.numRows = numRows;
+            this.numCols = numCols;
+            this.siloInstructions = siloInstructions;
+            this.inputStream = inputStream;
+            this.outputStream = outputStream;
+        }
+    }
+
+    public InputFileData parseInputFile(String input) {
+        Scanner scanner = new Scanner(input);
+        int numRows = scanner.nextInt();
+        int numCols = scanner.nextInt();
+
+        List<List<Instruction>> siloInstructions = new ArrayList<>();
+        List<Integer> inputStream = new ArrayList<>();
+        List<int[]> outputStream = new ArrayList<>();
+
+        while (scanner.hasNext()) {
+            String token = scanner.next();
+            if (token.equals("END")) {
+                List<Instruction> instructions = new ArrayList<>();
+                while (scanner.hasNext() && !token.equals("END")) {
+                    token = scanner.next();
+                    if (!token.equals("END")) {
+                        String[] tokens = new String[]{token};
+                        if (instructionFactories.containsKey(token)) {
+                            InstructionFactory factory = instructionFactories.get(token);
+                            Instruction instruction = factory.create(substituteLabels(tokens, new HashMap<>()));
+                            instructions.add(instruction);
+                        } else {
+                            throw new IllegalArgumentException("Unknown command: " + token);
+                        }
+                    }
+                }
+                siloInstructions.add(instructions);
+            } else if (token.equals("INPUT")) {
+                int x = scanner.nextInt();
+                int y = scanner.nextInt();
+                inputStream.add(x);
+                inputStream.add(y);
+                while (scanner.hasNextInt()) {
+                    int value = scanner.nextInt();
+                    inputStream.add(value);
+                }
+            } else if (token.equals("OUTPUT")) {
+                while (scanner.hasNextInt()) {
+                    int x = scanner.nextInt();
+                    int y = scanner.nextInt();
+                    outputStream.add(new int[]{x, y});
+                }
+                scanner.next(); // Consume the "END" token
+            } else {
+                throw new IllegalArgumentException("Unexpected token: " + token);
+            }
+        }
+
+        scanner.close();
+        return new InputFileData(numRows, numCols, siloInstructions, inputStream, outputStream);
+    }
+
 }

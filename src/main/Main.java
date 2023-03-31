@@ -21,6 +21,12 @@ public class Main {
         // Create and execute test programs for each silo
         Parser parser = new Parser();
 
+        // Program Input
+            // ex:  [numRows] [numCols] [instruction] [instruction] . . .
+        // END [instruction] [instruction] . . . END . . . END INPUT -1 1 10
+        // 11 12 13 END OUTPUT 1 1 END
+        String input = "2 2 NOOP END MOVE 5 ACC SAVE ADD DOWN END NOOP END MOVE 5 ACC END INPUT -1 1 10 11 12 13 END OUTPUT 1 1 END";
+
         // Test program for silo1
         String program1 =
                 "NOOP\n" +
