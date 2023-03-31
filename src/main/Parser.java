@@ -82,14 +82,14 @@ public class Parser {
         Instruction create(String[] tokens);
     }
 
-    public static class InputFileData {
+    public static class InputTextData {
         public int numRows;
         public int numCols;
         public List<List<Instruction>> siloInstructions;
         public List<Stream> inputStreams;
         public List<Stream> outputStreams;
 
-        public InputFileData(int numRows, int numCols, List<List<Instruction>> siloInstructions,
+        public InputTextData(int numRows, int numCols, List<List<Instruction>> siloInstructions,
                           List<Stream> inputStreams, List<Stream> outputStreams) {
             this.numRows = numRows;
             this.numCols = numCols;
@@ -99,7 +99,7 @@ public class Parser {
         }
     }
 
-    public InputFileData parseInputFile(String input) {
+    public InputTextData parseInputText(String input) {
         Scanner scanner = new Scanner(input);
         int numRows = scanner.nextInt();
         int numCols = scanner.nextInt();
@@ -147,7 +147,7 @@ public class Parser {
         }
 
         scanner.close();
-        return new InputFileData(numRows, numCols, siloInstructions, inputStreams, outputStreams);
+        return new InputTextData(numRows, numCols, siloInstructions, inputStreams, outputStreams);
     }
 
 }
