@@ -1,6 +1,7 @@
 package main;
 
 import commands.*;
+import network.Stream;
 
 import java.util.*;
 
@@ -85,16 +86,16 @@ public class Parser {
         public int numRows;
         public int numCols;
         public List<List<Instruction>> siloInstructions;
-        public List<Integer> inputStream;
-        public List<int[]> outputStream;
+        public List<Stream> inputStreams;
+        public List<Stream> outputStreams;
 
         public InputFileData(int numRows, int numCols, List<List<Instruction>> siloInstructions,
-                          List<Integer> inputStream, List<int[]> outputStream) {
+                          List<Stream> inputStreams, List<Stream> outputStreams) {
             this.numRows = numRows;
             this.numCols = numCols;
             this.siloInstructions = siloInstructions;
-            this.inputStream = inputStream;
-            this.outputStream = outputStream;
+            this.inputStreams = inputStreams;
+            this.outputStreams = outputStreams;
         }
     }
 
@@ -104,8 +105,8 @@ public class Parser {
         int numCols = scanner.nextInt();
 
         List<List<Instruction>> siloInstructions = new ArrayList<>();
-        List<Integer> inputStream = new ArrayList<>();
-        List<int[]> outputStream = new ArrayList<>();
+        List<Stream> inputStreams = new ArrayList<>();
+        List<Stream> outputStreams = new ArrayList<>();
 
         while (scanner.hasNext()) {
             String token = scanner.next();
@@ -128,18 +129,17 @@ public class Parser {
             } else if (token.equals("INPUT")) {
                 int x = scanner.nextInt();
                 int y = scanner.nextInt();
-                inputStream.add(x);
-                inputStream.add(y);
+                Stream inputSteam = new Stream(x, y, true);
                 while (scanner.hasNextInt()) {
                     int value = scanner.nextInt();
-                    inputStream.add(value);
+                    inputSteam.addValue(value);
                 }
+                inputStreams.add(inputSteam);
             } else if (token.equals("OUTPUT")) {
-                while (scanner.hasNextInt()) {
-                    int x = scanner.nextInt();
-                    int y = scanner.nextInt();
-                    outputStream.add(new int[]{x, y});
-                }
+                int x = scanner.nextInt();
+                int y = scanner.nextInt();
+                Stream outputStream = new Stream(x, y, false);
+                outputStreams.add(outputStream);
                 scanner.next(); // Consume the "END" token
             } else {
                 throw new IllegalArgumentException("Unexpected token: " + token);
@@ -147,7 +147,7 @@ public class Parser {
         }
 
         scanner.close();
-        return new InputFileData(numRows, numCols, siloInstructions, inputStream, outputStream);
+        return new InputFileData(numRows, numCols, siloInstructions, inputStreams, outputStreams);
     }
 
 }
