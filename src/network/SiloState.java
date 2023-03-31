@@ -1,6 +1,5 @@
 package network;
 
-import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
@@ -10,25 +9,24 @@ public class SiloState {
     private int instructionIndex;
     private int row;
     private int col;
+    private SiloNetwork network;
     private CyclicBarrier barrier;
-    private Map<String, Port> ports;
     private String name;
 
-    public SiloState(Map<String, Port> ports, CyclicBarrier barrier, String name, int row, int col) {
+    public SiloState(SiloNetwork network, int row, int col, String name) {
         acc = 0;
         bak = 0;
         instructionIndex = 0;
-        this.ports = ports;
-        this.barrier = barrier;
-        this.name = name;
         this.row = row;
         this.col = col;
+        this.barrier = network.getBarrier();
+        this.name = name;
+        this.network = network;
     }
 
     public String getName() {
         return name;
     }
-
 
     public void waitForSynchronization() {
         try {
@@ -39,15 +37,11 @@ public class SiloState {
     }
 
     public int readFromPort(String port) throws InterruptedException {
-        Port p = ports.get(port);
-        if (p == null) {
-            throw new IllegalArgumentException("Invalid port: " + port);
-        }
-        return p.readValue();
+        return network.getValue(row, col, port);
     }
 
     public void writeToPort(String port, int value) throws InterruptedException {
-        ports.get(port).writeValue(value);
+        network.setValue(row, col, port, value);
     }
 
     public boolean isRegister(String key) {
@@ -55,13 +49,13 @@ public class SiloState {
     }
 
     public boolean isPort(String key) {
-        return ports.containsKey(key.toUpperCase());
+        return key.equals("UP") || key.equals("DOWN") || key.equals("LEFT") || key.equals("RIGHT");
     }
 
     public int getRegisterValue(String key) {
-        if (key.equalsIgnoreCase("ACC")) {
+        if (key.equals("ACC")) {
             return acc;
-        } else if (key.equalsIgnoreCase("BAK")) {
+        } else if (key.equals("BAK")) {
             return bak;
         }
         throw new IllegalArgumentException("Invalid register: " + key);

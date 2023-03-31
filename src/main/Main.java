@@ -23,16 +23,16 @@ public class Main {
 
         // Test program for silo1
         String program1 =
-                "ADD 1\n" +
-                "MOVE ACC RIGHT\n" +
-                "SAVE";
+                "NOOP\n" +
+                "NOOP\n" +
+                "NOOP";
         List<Instruction> instructions1 = parser.parse(program1);
 
         // Test program for silo2
         String program2 =
-                "ADD 10\n" +
+                "MOVE 5 ACC\n" +
                 "SAVE\n" +
-                "MOVE RIGHT ACC";
+                "ADD DOWN";
         List<Instruction> instructions2 = parser.parse(program2);
 
         // Test program for silo3
@@ -40,7 +40,7 @@ public class Main {
         List<Instruction> instructions3 = parser.parse(program3);
 
         // Test program for silo4
-        String program4 = "NOOP";
+        String program4 = "MOVE 5 ACC";
         List<Instruction> instructions4 = parser.parse(program4);
 
         // Create interpreters for each network.SiloState
