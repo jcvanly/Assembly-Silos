@@ -39,7 +39,7 @@ public class Interpreter {
 
             try {
                 // Sleep for 1 second
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 // Restore the interrupted status
                 Thread.currentThread().interrupt();
