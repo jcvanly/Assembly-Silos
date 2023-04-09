@@ -20,10 +20,9 @@ public class Silo extends Pane {
 
     /**
      * Creates a Silo object
-     * @param parentPane the pane to add the Silo to
      */
-    public Silo(Pane parentPane) {
-        createOuterRectangle(parentPane);
+    public Silo( ) {
+        createOuterRectangle();
         createInnerSquaresAndLabels();
         createCodeArea();
     }
@@ -62,20 +61,16 @@ public class Silo extends Pane {
 
     /**
      * Creates the main rectangle of the Silo
-     * @param parentPane the pane to add the Silo to
      */
-    private void createOuterRectangle(Pane parentPane) {
-        outerRectangle = new Rectangle();
+    private void createOuterRectangle() {
+        outerRectangle = new Rectangle(200,200);
         outerRectangle.setFill(Color.BLACK);
         outerRectangle.setStroke(Color.WHITE);
         outerRectangle.setStrokeWidth(5);
 
-        outerRectangle.widthProperty().bind(Bindings.min(parentPane.widthProperty(), parentPane.heightProperty()));
-        outerRectangle.heightProperty().bind(Bindings.min(parentPane.widthProperty(), parentPane.heightProperty()));
+        //outerRectangle.widthProperty().bind(Bindings.min(parentPane.widthProperty(), parentPane.heightProperty()));
+        //outerRectangle.heightProperty().bind(Bindings.min(parentPane.widthProperty(), parentPane.heightProperty()));
         getChildren().add(outerRectangle);
-
-        layoutXProperty().bind(parentPane.widthProperty().subtract(outerRectangle.widthProperty()).divide(2));
-        layoutYProperty().bind(parentPane.heightProperty().subtract(outerRectangle.heightProperty()).divide(2));
     }
 
     /**
