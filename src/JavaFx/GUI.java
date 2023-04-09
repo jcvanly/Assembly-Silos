@@ -10,11 +10,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class ColorSplitPaneWithButtonsAndScaledCubes extends Application {
+public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
