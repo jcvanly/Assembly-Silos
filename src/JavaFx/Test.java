@@ -10,11 +10,9 @@ public class Test extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        int numSilos = 16; // Set the number of Silos to create
-
-        // Calculate the number of rows and columns needed
-        int numRows = (int) Math.ceil(Math.sqrt(numSilos));
-        int numCols = (int) Math.ceil((double) numSilos / numRows);
+        int numRows = 4;
+        int numCols = 4;
+        int numSilos = numRows * numCols;
 
         GridPane gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: black;");
