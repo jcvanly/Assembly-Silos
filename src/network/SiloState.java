@@ -3,6 +3,9 @@ package network;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
+/**
+ * Represents the state of a silo
+ */
 public class SiloState {
     private int acc;
     private int bak;
@@ -13,6 +16,13 @@ public class SiloState {
     private CyclicBarrier barrier;
     private String name;
 
+    /**
+     * Creates a new SiloState.
+     * @param network The network that this silo is a part of.
+     * @param row The row of the silo.
+     * @param col The column of the silo.
+     * @param name The name of the silo.
+     */
     public SiloState(SiloNetwork network, int row, int col, String name) {
         acc = 0;
         bak = 0;
@@ -24,10 +34,17 @@ public class SiloState {
         this.network = network;
     }
 
+    /**
+     * Gets name of silo
+     * @return name of silo
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Waits for all silos to reach this point.
+     */
     public void waitForSynchronization() {
         try {
             barrier.await();
@@ -36,18 +53,40 @@ public class SiloState {
         }
     }
 
+    /**
+     * reads from a port
+     * @param port
+     * @return
+     * @throws InterruptedException
+     */
     public int readFromPort(String port) throws InterruptedException {
         return network.getValue(row, col, port);
     }
 
+    /**
+     * writes to a port
+     * @param port
+     * @param value
+     * @throws InterruptedException
+     */
     public void writeToPort(String port, int value) throws InterruptedException {
         network.setValue(row, col, port, value);
     }
 
+    /**
+     * Checks if the key is a register
+     * @param key
+     * @return
+     */
     public boolean isRegister(String key) {
         return key.equalsIgnoreCase("ACC") || key.equalsIgnoreCase("BAK");
     }
 
+    /**
+     * Checks if the key is a port
+     * @param key
+     * @return
+     */
     public boolean isPort(String key) {
         return key.equals("UP") || key.equals("DOWN") || key.equals("LEFT") || key.equals("RIGHT");
     }

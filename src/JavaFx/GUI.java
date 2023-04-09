@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class GUI extends Application {
 
     @Override
@@ -63,7 +65,8 @@ public class GUI extends Application {
         double maxSquareSizeY = (windowHeight - (gridSizeY - 1) * 10) / gridSizeY;
         double maxSquareSize = Math.min(maxSquareSizeX, maxSquareSizeY);
 
-        Image image = new Image("C:\\Users\\jackv\\IdeaProjects\\assembly-silos\\src\\JavaFx\\Silo.png");
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Silo.png")));
+
 
         for (int i = 0; i < gridSizeY; i++) {
             for (int j = 0; j < gridSizeX; j++) {
