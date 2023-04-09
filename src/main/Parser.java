@@ -5,9 +5,15 @@ import network.Stream;
 
 import java.util.*;
 
+/**
+ * Parses a program into a list of instructions.
+ */
 public class Parser {
     private final Map<String, InstructionFactory> instructionFactories;
 
+    /**
+     * Creates a new parser.
+     */
     public Parser() {
         instructionFactories = new HashMap<>();
         instructionFactories.put("NOOP", Noop::new);
@@ -20,6 +26,12 @@ public class Parser {
         // commands.Add more instruction factories here
     }
 
+    /**
+     * Parses a program into a list of instructions.
+     *
+     * @param program the program to parse
+     * @return the list of instructions
+     */
     public List<Instruction> parse(String program) {
         List<Instruction> instructions = new ArrayList<>();
         Map<String, Label> labels = new HashMap<>();
@@ -99,6 +111,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a program into a list of instructions.
+     *
+     * @param input the program to parse
+     * @return the list of instructions
+     */
     public InputTextData parseInputText(String input) {
         Scanner scanner = new Scanner(input);
         int numRows = scanner.nextInt();

@@ -10,6 +10,12 @@ public class Stream {
     private final List<Integer> values;
     private int currentIndex;
 
+    /***
+     * Creates a new stream
+     * @param row The row of the stream
+     * @param col The column of the stream
+     * @param isInput True if the stream is an input stream, false if it is an output stream
+     */
     public Stream(int row, int col, boolean isInput) {
         this.row = row;
         this.col = col;
@@ -18,10 +24,18 @@ public class Stream {
         this.currentIndex = 0;
     }
 
+    /***
+     * Adds a value to the stream
+     * @param value
+     */
     public void addValue(int value) {
         values.add(value);
     }
 
+    /***
+     * Gets next value from the stream
+     * @return The next value in the stream
+     */
     public int getNextValue() {
         if (isInput) {
             int value = values.get(currentIndex);
@@ -32,6 +46,10 @@ public class Stream {
         }
     }
 
+    /***
+     * Writes a value to the stream
+     * @param value The value to write to the stream
+     */
     public void writeValue() {
 
     }

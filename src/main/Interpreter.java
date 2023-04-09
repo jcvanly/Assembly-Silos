@@ -6,15 +6,28 @@ import network.SiloState;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
+/**
+ * The interpreter class that runs the instructions.
+ */
 public class Interpreter {
     private final SiloState siloState;
     private final List<Instruction> instructions;
 
+    /**
+     * Creates a new interpreter.
+     * @param siloState The silo state.
+     * @param instructions The list of instructions.
+     */
     public Interpreter(SiloState siloState, List<Instruction> instructions) {
         this.siloState = siloState;
         this.instructions = instructions;
     }
 
+    /**
+     * Runs the instructions.
+     * @throws InterruptedException If the thread is interrupted.
+     * @throws BrokenBarrierException If the barrier is broken.
+     */
     public void run() throws InterruptedException, BrokenBarrierException {
         while (true) { // Keep running the instructions in an infinite loop
             Instruction currentInstruction = instructions.get(siloState.getInstructionIndex());
