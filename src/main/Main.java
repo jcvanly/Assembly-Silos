@@ -63,6 +63,7 @@ public class Main {
                 e.printStackTrace();
             }
         });
+
         Thread silo2 = new Thread(() -> {
             try {
                 interpreter2.run();
@@ -70,6 +71,7 @@ public class Main {
                 e.printStackTrace();
             }
         });
+
         Thread silo3 = new Thread(() -> {
             try {
                 interpreter3.run();
@@ -77,6 +79,7 @@ public class Main {
                 e.printStackTrace();
             }
         });
+
         Thread silo4 = new Thread(() -> {
             try {
                 interpreter4.run();
