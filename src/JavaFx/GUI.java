@@ -65,7 +65,7 @@ public class GUI extends Application {
         double maxSquareSizeY = (windowHeight - (gridSizeY - 1) * 10) / gridSizeY;
         double maxSquareSize = Math.min(maxSquareSizeX, maxSquareSizeY);
 
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Silo.png")));
+        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Silo.png")));
 
 
         for (int i = 0; i < gridSizeY; i++) {
