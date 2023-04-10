@@ -3,15 +3,14 @@ package JavaFx;
 
 import commands.Instruction;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import main.Parser;
 import network.SiloNetwork;
@@ -33,7 +32,8 @@ public class SiloApp extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        FlowPane root = new FlowPane();
+        HBox root = new HBox();
+        root.setStyle("-fx-background-color: black;");
 
         GridPane gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: black;");
@@ -61,6 +61,9 @@ public class SiloApp extends Application {
 
 
         Button startButton = new Button("Start");
+        startButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        startButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
+
         startButton.setOnAction(e -> {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
@@ -71,6 +74,8 @@ public class SiloApp extends Application {
         });
 
         Button stopButton = new Button("Stop");
+        stopButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        stopButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
         stopButton.setOnAction(event -> {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
@@ -81,6 +86,8 @@ public class SiloApp extends Application {
         });
 
         Button stepButton = new Button("Step");
+        stepButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        stepButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
         stepButton.setOnAction(event -> {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
@@ -94,12 +101,33 @@ public class SiloApp extends Application {
             }
         });
 
+        HBox buttonBox = new HBox();
+        buttonBox.getChildren().addAll(startButton, stopButton, stepButton);
+        buttonBox.setAlignment(Pos.BOTTOM_CENTER);
 
-        root.getChildren().addAll(gridPane, startButton, stopButton, stepButton);
+
+        root.getChildren().addAll(buttonBox, gridPane);
+
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Assembly Silo Program");
         primaryStage.show();
+
+        primaryStage.setOnCloseRequest(event -> {
+            stopThreads();
+            Platform.exit();
+            System.exit(0);
+        });
+
+    }
+
+    private void stopThreads() {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                SiloState silo = network.getSiloState(row, col);
+                silo.getThread().interrupt();
+            }
+        }
     }
 
 

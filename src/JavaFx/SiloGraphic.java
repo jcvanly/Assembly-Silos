@@ -78,8 +78,6 @@ public class SiloGraphic extends Pane {
         outerRectangle.setStroke(Color.WHITE);
         outerRectangle.setStrokeWidth(5);
 
-        //outerRectangle.widthProperty().bind(Bindings.min(parentPane.widthProperty(), parentPane.heightProperty()));
-        //outerRectangle.heightProperty().bind(Bindings.min(parentPane.widthProperty(), parentPane.heightProperty()));
         getChildren().add(outerRectangle);
     }
 
