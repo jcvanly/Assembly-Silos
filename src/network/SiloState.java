@@ -1,5 +1,11 @@
 package network;
 
+import JavaFx.SiloGraphic;
+import commands.Instruction;
+import javafx.application.Platform;
+import main.Interpreter;
+
+import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
@@ -10,42 +16,53 @@ public class SiloState {
     private int acc;
     private int bak;
     private int instructionIndex;
-    private int row;
-    private int col;
-    private SiloNetwork network;
-    private CyclicBarrier barrier;
-    private String name;
+    private final int row;
+    private final int col;
+    private final SiloNetwork network;
+    private static CyclicBarrier barrier;
+    private final SiloGraphic siloGraphic;
+    private Interpreter interpreter;
+    private List<Instruction> instructions;
+    private Thread thread;
 
     /**
      * Creates a new SiloState.
      * @param network The network that this silo is a part of.
      * @param row The row of the silo.
      * @param col The column of the silo.
-     * @param name The name of the silo.
      */
-    public SiloState(SiloNetwork network, int row, int col, String name) {
+    public SiloState(SiloNetwork network, int row, int col) {
         acc = 0;
         bak = 0;
         instructionIndex = 0;
         this.row = row;
         this.col = col;
-        this.barrier = network.getBarrier();
-        this.name = name;
+        barrier = network.getBarrier();
         this.network = network;
+
+        siloGraphic = new SiloGraphic();
     }
 
-    /**
-     * Gets name of silo
-     * @return name of silo
-     */
-    public String getName() {
-        return name;
+    public void startSilo() {
+        thread.start();
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public SiloGraphic getSiloGraphic() {
+        return siloGraphic;
+    }
+
+    public Interpreter getInterpreter() {
+        return interpreter;
     }
 
     /**
      * Waits for all silos to reach this point.
      */
-    public void waitForSynchronization() {
+    public static void waitForSynchronization() {
         try {
             barrier.await();
         } catch (InterruptedException | BrokenBarrierException e) {
@@ -111,19 +128,23 @@ public class SiloState {
     }
 
     public int getAcc() {
+        Platform.runLater(() -> siloGraphic.setAccVariable(acc));
         return acc;
     }
 
     public void setAcc(int acc) {
         this.acc = acc;
+        Platform.runLater(() -> siloGraphic.setAccVariable(acc));
     }
 
     public int getBak() {
+        Platform.runLater(() -> siloGraphic.setBakVariable(bak));
         return bak;
     }
 
     public void setBak(int bak) {
         this.bak = bak;
+        Platform.runLater(() -> siloGraphic.setBakVariable(bak));
     }
 
     public int getInstructionIndex() {
@@ -134,4 +155,26 @@ public class SiloState {
         this.instructionIndex = instructionIndex;
     }
 
+    public void setCode(String currentCode) {
+        siloGraphic.setCodeArea(currentCode);
+    }
+
+    public void setInstructions(List<Instruction> instructions) {
+        interpreter = new Interpreter(this, instructions);
+        thread = new Thread(() -> {
+            try {
+                interpreter.run();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void toggleExecution() {
+        interpreter.toggleExecution();
+    }
+
+    public void step() throws InterruptedException {
+        interpreter.step();
+    }
 }

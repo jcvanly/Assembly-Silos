@@ -7,12 +7,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
+import network.SiloState;
+
 import java.util.concurrent.Callable;
 
 /**
  * A visual representation of a Silo
  */
-public class Silo extends Pane {
+public class SiloGraphic extends Pane {
     private Rectangle outerRectangle;
     private Rectangle[] innerSquares;
     private Label[] variableLabels;
@@ -21,7 +23,7 @@ public class Silo extends Pane {
     /**
      * Creates a Silo object
      */
-    public Silo( ) {
+    public SiloGraphic() {
         createOuterRectangle();
         createInnerSquaresAndLabels();
         createCodeArea();
@@ -57,6 +59,14 @@ public class Silo extends Pane {
      */
     public void setModeVariable(String value) {
         variableLabels[3].setText(value);
+    }
+
+    /**
+     * Sets the text of the code area
+     * @param code the code to set the code area to
+     */
+    public void setCodeArea(String code) {
+        codeArea.setText(code);
     }
 
     /**
@@ -138,7 +148,7 @@ public class Silo extends Pane {
      */
     private void createCodeArea() {
         codeArea = new TextArea();
-        codeArea.setStyle("-fx-control-inner-background: black; -fx-text-fill: white; -fx-focus-color: transparent;");
+        codeArea.setStyle("-fx-control-inner-background: black; -fx-text-fill: white; -fx-focus-color: white;");
         codeArea.setWrapText(true);
         codeArea.prefWidthProperty().bind(outerRectangle.widthProperty().subtract(innerSquares[0].widthProperty()));
         codeArea.prefHeightProperty().bind(outerRectangle.heightProperty());

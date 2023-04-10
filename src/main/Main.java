@@ -8,53 +8,35 @@ import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
 public class Main {
+    private static SiloNetwork network;
+    private static Interpreter interpreter1;
+    private static Interpreter interpreter2;
+    private static Interpreter interpreter3;
+    private static Interpreter interpreter4;
+
     public static void main(String[] args) {
+        setup();
+        runProgram();
+    }
+
+    public static void setup() {
         // Create a network.SiloNetwork
-        SiloNetwork network = new SiloNetwork(2, 2, 4);
+        network = new SiloNetwork(2, 2, 4);
 
         // Create network.SiloState instances for two silos using the network.SiloNetwork
-        SiloState siloState1 = network.createSilo("Silo1", 0,0);
-        SiloState siloState2 = network.createSilo("Silo2",0,1);
-        SiloState siloState3 = network.createSilo("Silo3",1,0);
-        SiloState siloState4 = network.createSilo("Silo4",1,1);
+        SiloState siloState1 = network.createSilo( 0,0);
+        SiloState siloState2 = network.createSilo(0,1);
+        SiloState siloState3 = network.createSilo(1,0);
+        SiloState siloState4 = network.createSilo(1,1);
 
         // Create and execute test programs for each silo
-        Parser parser = new Parser();
-
-        // Program Input
-            // ex:  [numRows] [numCols] [instruction] [instruction] . . .
-        // END [instruction] [instruction] . . . END . . . END INPUT -1 1 10
-        // 11 12 13 END OUTPUT 1 1 END
-        String input = "2 2 NOOP END MOVE 5 ACC SAVE ADD DOWN END NOOP END MOVE 5 ACC END INPUT -1 1 10 11 12 13 END OUTPUT 1 1 END";
-
-        // Test program for silo1
-        String program1 =
-                "NOOP\n" +
-                "NOOP\n" +
-                "NOOP";
-        List<Instruction> instructions1 = parser.parse(program1);
-
-        // Test program for silo2
-        String program2 =
-                "MOVE 5 ACC\n" +
-                "SAVE\n" +
-                "ADD DOWN";
-        List<Instruction> instructions2 = parser.parse(program2);
-
-        // Test program for silo3
+        String program2 = "MOVE 5 ACC\n" + "SAVE\n" + "ADD DOWN";
         String program3 = "NOOP";
-        List<Instruction> instructions3 = parser.parse(program3);
-
-        // Test program for silo4
         String program4 = "MOVE 5 ACC";
-        List<Instruction> instructions4 = parser.parse(program4);
 
-        // Create interpreters for each network.SiloState
-        Interpreter interpreter1 = new Interpreter(siloState1, instructions1);
-        Interpreter interpreter2 = new Interpreter(siloState2, instructions2);
-        Interpreter interpreter3 = new Interpreter(siloState3, instructions3);
-        Interpreter interpreter4 = new Interpreter(siloState4, instructions4);
+    }
 
+    public static void runProgram() {
         // Execute the programs in silos concurrently
         Thread silo1 = new Thread(() -> {
             try {

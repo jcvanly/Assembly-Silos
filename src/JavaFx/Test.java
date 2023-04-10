@@ -2,17 +2,17 @@ package JavaFx;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Test extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        int numRows = 4;
-        int numCols = 4;
-        int numSilos = numRows * numCols;
+        int numRows = 3;
+        int numCols = 3;
 
         GridPane gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: black;");
@@ -21,15 +21,24 @@ public class Test extends Application {
         gridPane.setVgap(50);
 
         // Create grid of Silos
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                if (row * numCols + col >= numSilos) {
-                    break;
-                }
-                Silo silo = new Silo();
-                gridPane.add(silo, col, row);
+        for (int row = 1; row < numRows+1; row++) {
+            for (int col = 1; col < numCols+1; col++) {
+
             }
         }
+
+        Label testlabel = new Label("IN.A");
+        testlabel.setStyle("-fx-text-fill: white;");
+        gridPane.add(testlabel, 1, 0);
+        testlabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        GridPane.setHalignment(testlabel, javafx.geometry.HPos.CENTER);
+
+        Label testlabel2 = new Label("OUT.A");
+        testlabel2.setStyle("-fx-text-fill: white;");
+        gridPane.add(testlabel2, 3, 4);
+        testlabel2.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        GridPane.setHalignment(testlabel2, javafx.geometry.HPos.CENTER);
+
 
         Scene scene = new Scene(gridPane);
         primaryStage.setScene(scene);
