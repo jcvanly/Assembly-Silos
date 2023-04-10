@@ -1,9 +1,8 @@
 package network;
 
-import JavaFx.SiloGraphic;
+import gui.SiloGraphic;
 import commands.Instruction;
 import javafx.application.Platform;
-import main.Interpreter;
 
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
@@ -22,6 +21,7 @@ public class SiloState {
     private static CyclicBarrier barrier;
     private final SiloGraphic siloGraphic;
     private Interpreter interpreter;
+    private Parser parser;
     private List<Instruction> instructions;
     private Thread thread;
 
@@ -40,6 +40,7 @@ public class SiloState {
         barrier = network.getBarrier();
         this.network = network;
 
+        parser = new Parser();
         siloGraphic = new SiloGraphic();
     }
 
@@ -157,6 +158,8 @@ public class SiloState {
 
     public void setCode(String currentCode) {
         siloGraphic.setCodeArea(currentCode);
+        List<Instruction> instructions = parser.parse(currentCode);
+        setInstructions(instructions);
     }
 
     public void setInstructions(List<Instruction> instructions) {
@@ -168,6 +171,12 @@ public class SiloState {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void updateInstructionsFromGraphic() {
+        String code = siloGraphic.getCodeArea();
+        System.out.println(code);
+        setCode(code);
     }
 
     public void toggleExecution() {

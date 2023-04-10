@@ -1,25 +1,23 @@
-package JavaFx;
-
+package gui;
 
 import commands.Instruction;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import main.Parser;
+import network.Parser;
 import network.SiloNetwork;
 import network.SiloState;
 
 import java.util.List;
+import java.util.Objects;
 
 
-public class SiloApp extends Application {
+public class AssemblySilosGUI extends Application {
 
     private static SiloNetwork network;
     private static final int ROWS = 2;
@@ -43,13 +41,12 @@ public class SiloApp extends Application {
 
 
         network = new SiloNetwork(ROWS, COLS, COLS * ROWS);
-        Parser parser = new Parser();
+
+
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < ROWS; col++) {
                 String program1 = "ADD 1\n" + "SAVE\n" + "ADD 1";
-                List<Instruction> instructions = parser.parse(program1);
                 SiloState silo = network.createSilo(row, col);
-                silo.setInstructions(instructions);
                 silo.setCode(program1);
                 gridPane.add(silo.getSiloGraphic(), col, row);
 
@@ -69,6 +66,7 @@ public class SiloApp extends Application {
                 for (int col = 0; col < COLS; col++) {
                     SiloState silo = network.getSiloState(row, col);
                     silo.toggleExecution();
+                    silo.updateInstructionsFromGraphic();
                 }
             }
         });
@@ -104,9 +102,10 @@ public class SiloApp extends Application {
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(startButton, stopButton, stepButton);
         buttonBox.setAlignment(Pos.BOTTOM_CENTER);
-
+        buttonBox.setSpacing(20);
 
         root.getChildren().addAll(buttonBox, gridPane);
+
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

@@ -1,4 +1,4 @@
-package JavaFx;
+package gui;
 
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.TextArea;
@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
-import network.SiloState;
 
 import java.util.concurrent.Callable;
 
@@ -67,6 +66,10 @@ public class SiloGraphic extends Pane {
      */
     public void setCodeArea(String code) {
         codeArea.setText(code);
+    }
+
+    public String getCodeArea() {
+        return codeArea.getText();
     }
 
     /**
