@@ -67,7 +67,7 @@ public class Interpreter {
         if (siloState.getInstructionIndex() >= instructions.size()) {
             siloState.setInstructionIndex(0);
         }
-        SiloState.waitForSynchronization();
+
 
     }
 
