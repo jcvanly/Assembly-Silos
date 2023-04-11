@@ -90,7 +90,7 @@ public class SiloState {
      */
     public void writeToPort(String port, int value) throws InterruptedException {
         Platform.runLater(() -> siloGraphic.setModeVariable("WRITE"));
-        //Platform.runLater(() -> siloGraphic.updateTransferValue(value, port));
+        Platform.runLater(() -> siloGraphic.updateTransferValue(value, port));
         network.setValue(row, col, port, value);
     }
 
@@ -196,5 +196,9 @@ public class SiloState {
 
     public void step() throws InterruptedException {
         interpreter.step();
+    }
+
+    public void setValuesChanged(boolean b) {
+        siloGraphic.setValuesChanged(b);
     }
 }

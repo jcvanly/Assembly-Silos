@@ -17,8 +17,8 @@ import network.SiloState;
 public class AssemblySilosGUI extends Application {
 
     private static SiloNetwork network;
-    private static final int ROWS = 2;
-    private static final int COLS = 2;
+    private static final int ROWS = 4;
+    private static final int COLS = 4;
 
     public static void main(String[] args) {
         launch(args);
@@ -32,10 +32,6 @@ public class AssemblySilosGUI extends Application {
 
         GridPane gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: black;");
-        gridPane.setPadding(new javafx.geometry.Insets(50, 50, 50, 50));
-        gridPane.setHgap(50);
-        gridPane.setVgap(50);
-
 
         network = new SiloNetwork(ROWS, COLS, COLS * ROWS);
 

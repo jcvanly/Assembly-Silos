@@ -1,8 +1,6 @@
 package network;
 
 import commands.Instruction;
-import network.SiloState;
-
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
@@ -48,6 +46,10 @@ public class Interpreter {
                     Thread.currentThread().interrupt();
                     break;
                 }
+
+
+                //Let the siloState know, its values have been transferred, so it can update the GUI
+                siloState.setValuesChanged(true);
 
                 SiloState.waitForSynchronization();
             } else {

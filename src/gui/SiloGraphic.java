@@ -1,13 +1,11 @@
 package gui;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
@@ -15,8 +13,6 @@ import javafx.scene.text.Font;
 
 import java.util.concurrent.Callable;
 
-import static javafx.scene.layout.StackPane.setMargin;
-import static javafx.scene.layout.TilePane.setAlignment;
 
 /**
  * A visual representation of a Silo
@@ -36,10 +32,6 @@ public class SiloGraphic extends GridPane {
      * Creates a Silo object
      */
     public SiloGraphic() {
-        //set h and v gap to 25px
-        setHgap(10);
-        setVgap(10);
-
         mainSiloPane = new Pane();
         createOuterRectangle();
         createInnerSquaresAndLabels();
@@ -49,14 +41,15 @@ public class SiloGraphic extends GridPane {
     }
 
     private void createTransferValueLabels() {
-        upLabel = new Label(" >");
-        downLabel = new Label("< ");
-        leftLabel = new Label("< ");
-        rightLabel = new Label(" >");
+        upLabel = new Label("^ \n XXX");
+        downLabel = new Label("XXX \n v");
+        leftLabel = new Label("< XXX");
+        rightLabel = new Label("XXX >");
 
-        //rotate up and down labels 90 degrees
-        upLabel.setRotate(-90);
-        downLabel.setRotate(-90);
+        upLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        downLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        leftLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        rightLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
         upLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         downLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
@@ -68,20 +61,48 @@ public class SiloGraphic extends GridPane {
         leftLabel.setTextFill(Color.WHITE);
         rightLabel.setTextFill(Color.WHITE);
 
+        upLabel.setVisible(false);
+        downLabel.setVisible(false);
+        leftLabel.setVisible(false);
+        rightLabel.setVisible(false);
+
 
         add(upLabel, 1, 0);
         add(downLabel, 1, 2);
         add(leftLabel, 0, 1);
         add(rightLabel, 2, 1);
 
-        //center the lables in their respecive areas
+
         GridPane.setHalignment(upLabel, HPos.CENTER);
         GridPane.setHalignment(downLabel, HPos.CENTER);
 
     }
 
 
+    public void updateTransferValue(int value, String direction) {
+        switch (direction) {
+            case "UP" -> {
+                upLabel.setText("^\n" + value);
+                upLabel.setVisible(true);
+            }
+            case "DOWN" -> {
+                downLabel.setText(value + "\nv");
+                downLabel.setVisible(true);
+            }
+            case "LEFT" -> {
+                leftLabel.setText("< " + value);
+                leftLabel.setVisible(true);
+            }
+            case "RIGHT" -> {
+                rightLabel.setText(value + " >");
+                rightLabel.setVisible(true);
+            }
+            default -> {
+                System.out.println("Invalid direction");
+            }
+        }
 
+    }
 
 
     /**
@@ -226,6 +247,17 @@ public class SiloGraphic extends GridPane {
                 if (newValue.doubleValue() < innerSquare.getHeight() + 10) {
                     codeArea.setLayoutY(innerSquare.getHeight() + 10);
                 }
+            });
+        }
+    }
+
+    public void setValuesChanged(boolean b) {
+        if (b) {
+            Platform.runLater(() -> {
+                upLabel.setVisible(false);
+                downLabel.setVisible(false);
+                leftLabel.setVisible(false);
+                rightLabel.setVisible(false);
             });
         }
     }
