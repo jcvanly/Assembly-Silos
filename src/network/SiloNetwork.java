@@ -4,7 +4,7 @@ import java.util.concurrent.CyclicBarrier;
 
 public class SiloNetwork {
     private final Grid grid;
-    private CyclicBarrier barrier;
+    private final CyclicBarrier barrier;
 
     public SiloNetwork(int numRows, int numCols, int siloCount) {
         grid = new Grid(numRows, numCols);
@@ -104,11 +104,10 @@ public class SiloNetwork {
                 value = neighborSilo.getAcc();
                 return value;
             }
-            default -> {
-                throw new IllegalArgumentException("Invalid port: " + port);
-            }
         }
+        return 0;
     }
+
 
     public void setValue(int r, int c, String port, int value) {
         SiloState neighborSilo;
@@ -129,14 +128,7 @@ public class SiloNetwork {
                 neighborSilo = grid.getSilo(r, c + 1);
                 neighborSilo.setAcc(value);
             }
-            default -> {
-                System.out.println("Invalid port: " + port);
-            }
         }
-    }
-
-    public SiloState getSiloState(int row, int col) {
-        return grid.getSilo(row, col);
     }
 }
 

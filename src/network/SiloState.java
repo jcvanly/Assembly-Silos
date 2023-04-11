@@ -22,7 +22,6 @@ public class SiloState {
     private final SiloGraphic siloGraphic;
     private Interpreter interpreter;
     private final Parser parser;
-    private List<Instruction> instructions;
     private Thread thread;
 
     /**
