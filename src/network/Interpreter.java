@@ -1,8 +1,6 @@
-package main;
+package network;
 
 import commands.Instruction;
-import network.SiloState;
-
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 
@@ -11,8 +9,8 @@ import java.util.concurrent.BrokenBarrierException;
  */
 public class Interpreter {
     private final SiloState siloState;
-    private final List<Instruction> instructions;
-    private volatile boolean isRunning = false;
+    private List<Instruction> instructions;
+    private boolean isRunning = false;
 
     /**
      * Creates a new interpreter.
@@ -49,6 +47,10 @@ public class Interpreter {
                     break;
                 }
 
+
+                //Let the siloState know, its values have been transferred, so it can update the GUI
+                siloState.setValuesChanged(true);
+
                 SiloState.waitForSynchronization();
             } else {
                 Thread.sleep(100);
@@ -57,18 +59,23 @@ public class Interpreter {
     }
 
     public void step() throws InterruptedException {
-        if (instructions.isEmpty()) return;
         Instruction currentInstruction = instructions.get(siloState.getInstructionIndex());
         currentInstruction.execute(siloState);
-
         siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
 
+        // Reset the instruction index to 0 if it reaches the end of the instructions list
         if (siloState.getInstructionIndex() >= instructions.size()) {
             siloState.setInstructionIndex(0);
         }
+
     }
 
-    public void toggleExecution() {
-        isRunning = !isRunning;
+    public void setRunning(boolean running) {
+        isRunning = running;
     }
+
+    public void setInstructions(List<Instruction> instructions) {
+        this.instructions = instructions;
+    }
+
 }
