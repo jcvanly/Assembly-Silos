@@ -19,7 +19,6 @@ public class Stream {
      * @param isInput True if the stream is an input stream, false if it is an output stream
      */
     public Stream(int row, int col, boolean isInput) {
-        //if row or col is negative set to 0
         this.row = row;
         this.col = col;
         this.isInput = isInput;
@@ -28,39 +27,15 @@ public class Stream {
         streamGraphic = new StreamGraphic(this);
     }
 
-
     public void addValue(int value) {
         values.add(value);
         streamGraphic.updateGraphic();
-    }
-
-    /***
-     * Gets next value from the stream
-     * @return The next value in the stream
-     */
-    public int getNextValue() {
-        if (isInput) {
-            int value = values.get(currentIndex);
-            currentIndex = (currentIndex + 1) % values.size();
-            return value;
-        } else {
-            throw new UnsupportedOperationException("Cannot get value from output stream");
-        }
-    }
-
-    public void writeValue() {
-
     }
 
     public StreamGraphic getStreamGraphic() {
         return streamGraphic;
     }
 
-    public boolean isInput() {
-        return isInput;
-    }
-
-    //gets list of values
     public List<Integer> getValues() {
         return values;
     }
@@ -71,5 +46,16 @@ public class Stream {
 
     public int getCol() {
         return col;
+    }
+
+    public int getNextValue() {
+        if (isInput) {
+            int value = values.get(currentIndex);
+            System.out.println("Getting value " + value);
+            currentIndex = (currentIndex + 1) % values.size();
+            return value;
+        } else {
+            throw new UnsupportedOperationException("Cannot get value from output stream");
+        }
     }
 }

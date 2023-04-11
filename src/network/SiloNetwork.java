@@ -88,6 +88,13 @@ public class SiloNetwork {
     }
 
     public int receiveValue(int r, int c, String port) throws InterruptedException {
+        for (Stream inputStream : inputStreams) {
+            System.out.println(isSiloNextToStream(r, c, inputStream.getRow(), inputStream.getCol(), port));
+            if (isSiloNextToStream(r, c, inputStream.getRow(), inputStream.getCol(), port)) {
+                return inputStream.getNextValue();
+            }
+        }
+
         SynchronousQueue<Integer> queue;
         int value;
         switch (port) {
@@ -95,19 +102,43 @@ public class SiloNetwork {
             case "DOWN" -> queue = grid.getQueue(r + 1, c);
             case "LEFT" -> queue = grid.getQueue(r, c - 1);
             case "RIGHT" -> queue = grid.getQueue(r, c + 1);
-            default ->
-                    throw new IllegalArgumentException("Invalid port: " + port);
+            default -> throw new IllegalArgumentException("Invalid port: " + port);
         }
         value = queue.take();
         return value;
     }
 
-
-
     public void sendValue(int r, int c, String port, int value) throws InterruptedException {
+        System.out.println("Silo " + r + "," + c + " sending to " + port);
+        for (Stream outputStream : outputStreams) {
+            if (isSiloNextToStream(r, c, outputStream.getRow(), outputStream.getCol(), port)) {
+                outputStream.addValue(value);
+                return;
+            }
+        }
         SynchronousQueue<Integer> queue = grid.getQueue(r , c);
         queue.put(value);
     }
+
+    //checks if silo is adjacent to stream in the specified direction dir
+    private boolean isSiloNextToStream(int siloRow, int siloCol, int streamRow, int streamCol, String dir) {
+        switch (dir) {
+            case "UP" -> {
+                return siloRow - 1 == streamRow && siloCol == streamCol;
+            }
+            case "DOWN" -> {
+                return siloRow + 1 == streamRow && siloCol == streamCol;
+            }
+            case "LEFT" -> {
+                return siloCol - 1 == streamCol && siloRow == streamRow;
+            }
+            case "RIGHT" -> {
+                return siloCol + 1 == streamCol && siloRow == streamRow;
+            }
+            default -> throw new IllegalArgumentException("Invalid direction: " + dir);
+        }
+    }
+
 
     public List<Stream> getInputStreams() {
         return inputStreams;
@@ -117,4 +148,3 @@ public class SiloNetwork {
         return outputStreams;
     }
 }
-

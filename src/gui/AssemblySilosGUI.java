@@ -109,19 +109,8 @@ public class AssemblySilosGUI extends Application {
             StreamGraphic streamGraphic = stream.getStreamGraphic();
             streamGraphic.setStreamLabel("IN." + (char)('A' + i));
             streamsBox.getChildren().add(streamGraphic);
-
-            int tempRow = stream.getRow();
-            int tempCol = stream.getCol();
-            if (stream.getRow() == -1) {
-                tempRow = 0;
-            } else if (stream.getRow() == ROWS + 1) {
-                tempCol = ROWS+2;
-            } else if (stream.getCol() == -1) {
-                tempCol = 0;
-            } else if (stream.getCol() == COLS + 1) {
-                tempCol = COLS+2;
-            }
-            gridPane.add(streamGraphic.getStreamLabel(), tempRow, tempCol);
+            GridPane.setHalignment(streamGraphic.getStreamLabel(), HPos.CENTER);
+            gridPane.add(streamGraphic.getStreamLabel(),stream.getCol()+1, stream.getRow()+1);
         }
         for (int i = 0; i < network.getOutputStreams().size(); i++) {
             Stream stream = network.getOutputStreams().get(i);
@@ -129,7 +118,7 @@ public class AssemblySilosGUI extends Application {
             streamGraphic.setStreamLabel("OUT." + (char)('A' + i));
             streamsBox.getChildren().add(streamGraphic);
             GridPane.setHalignment(streamGraphic.getStreamLabel(), HPos.CENTER);
-            gridPane.add(streamGraphic.getStreamLabel(), stream.getRow()+1, stream.getCol()+1);
+            gridPane.add(streamGraphic.getStreamLabel(), stream.getCol()+1, stream.getRow()+1);
         }
 
         streamsBox.setAlignment(Pos.CENTER);
