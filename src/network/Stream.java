@@ -1,5 +1,8 @@
 package network;
 
+import gui.StreamGraphic;
+import javafx.scene.Node;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +12,7 @@ public class Stream {
     private final boolean isInput;
     private final List<Integer> values;
     private int currentIndex;
+    private StreamGraphic streamGraphic;
 
     /***
      * Creates a new stream
@@ -22,6 +26,7 @@ public class Stream {
         this.isInput = isInput;
         this.values = new ArrayList<>();
         this.currentIndex = 0;
+        streamGraphic = new StreamGraphic(this);
     }
 
     /***
@@ -30,6 +35,7 @@ public class Stream {
      */
     public void addValue(int value) {
         values.add(value);
+        streamGraphic.updateGraphic();
     }
 
     /***
@@ -53,4 +59,18 @@ public class Stream {
     public void writeValue() {
 
     }
+
+    public StreamGraphic getStreamGraphic() {
+        return streamGraphic;
+    }
+
+    public boolean isInput() {
+        return isInput;
+    }
+
+    //gets list of values
+    public List<Integer> getValues() {
+        return values;
+    }
+
 }

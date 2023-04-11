@@ -93,8 +93,6 @@ public class SiloState {
         network.sendValue(row, col, port, value);
         siloGraphic.setTransferLabelVisible(port, false);
         phaser.register();
-        //Update label on the GUI
-
     }
 
     /**

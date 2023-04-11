@@ -1,5 +1,7 @@
 package network;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.SynchronousQueue;
 
@@ -7,9 +9,15 @@ public class SiloNetwork {
     private final Grid grid;
     private final Phaser phaser;
 
-    public SiloNetwork(int numRows, int numCols, int siloCount) {
+    private final List<Stream> inputStreams;
+    private final List<Stream> outputStreams;
+
+
+    public SiloNetwork(int numRows, int numCols, List<Stream> inputStreams, List<Stream> outputStreams) {
+        this.inputStreams = inputStreams;
+        this.outputStreams = outputStreams;
         grid = new Grid(numRows, numCols);
-        phaser = new Phaser(siloCount);
+        phaser = new Phaser(numRows * numCols );
     }
 
     public SiloState createSilo(int row, int col) {
@@ -111,5 +119,20 @@ public class SiloNetwork {
     }
 
 
+    public Stream getInputStream(int index) {
+        return inputStreams.get(index);
+    }
+
+    public Stream getOutputStream(int index) {
+        return outputStreams.get(index);
+    }
+
+    public List<Stream> getInputStreams() {
+        return inputStreams;
+    }
+
+    public List<Stream> getOutputStreams() {
+        return outputStreams;
+    }
 }
 

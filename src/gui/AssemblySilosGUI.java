@@ -5,8 +5,10 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -50,7 +52,7 @@ public class AssemblySilosGUI extends Application {
             ROWS = fileData.numRows;
             COLS = fileData.numCols;
 
-            network = new SiloNetwork(ROWS, COLS, COLS * ROWS);
+            network = new SiloNetwork(ROWS, COLS, fileData.inputStreams, fileData.outputStreams);
 
             int counter = 0;
             for (int row = 0; row < ROWS; row++) {
@@ -110,7 +112,29 @@ public class AssemblySilosGUI extends Application {
         buttonBox.setAlignment(Pos.BOTTOM_CENTER);
         buttonBox.setSpacing(20);
 
-        root.getChildren().addAll(buttonBox, gridPane);
+        VBox sideDisplay = new VBox();
+
+        HBox streamsBox = new HBox();
+
+        //For each input & out put stream, get graphic and add to streamsBox
+        for (int i = 0; i < network.getInputStreams().size(); i++) {
+            StreamGraphic streamGraphic = network.getInputStreams().get(i).getStreamGraphic();
+            streamGraphic.setStreamLabel("IN." + (char)('A' + i));
+            streamsBox.getChildren().add(streamGraphic);
+        }
+        for (int i = 0; i < network.getOutputStreams().size(); i++) {
+            StreamGraphic streamGraphic = network.getOutputStreams().get(i).getStreamGraphic();
+            streamGraphic.setStreamLabel("OUT." + (char)('A' + i));
+            streamsBox.getChildren().add(streamGraphic);
+        }
+
+        streamsBox.setAlignment(Pos.CENTER);
+        streamsBox.setSpacing(20);
+        sideDisplay.getChildren().addAll(streamsBox, buttonBox);
+        sideDisplay.setSpacing(20);
+        sideDisplay.setAlignment(Pos.CENTER);
+
+        root.getChildren().addAll(sideDisplay, gridPane);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -124,7 +148,5 @@ public class AssemblySilosGUI extends Application {
         });
 
     }
-
-
 
 }

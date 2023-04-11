@@ -1,6 +1,5 @@
 package gui;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.scene.control.TextArea;
