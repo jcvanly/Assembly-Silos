@@ -3,7 +3,7 @@ import network.SiloState;
 
 public class Noop implements Instruction {
 
-    public Noop(String[] strings) {
+    public Noop() {
     }
 
     @Override

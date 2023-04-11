@@ -10,7 +10,7 @@ public class Stream {
     private final boolean isInput;
     private final List<Integer> values;
     private int currentIndex;
-    private StreamGraphic streamGraphic;
+    private final StreamGraphic streamGraphic;
 
     /***
      * Creates a new stream
@@ -28,10 +28,7 @@ public class Stream {
         streamGraphic = new StreamGraphic(this);
     }
 
-    /***
-     * Adds a value to the stream
-     * @param value
-     */
+
     public void addValue(int value) {
         values.add(value);
         streamGraphic.updateGraphic();
@@ -51,10 +48,6 @@ public class Stream {
         }
     }
 
-    /***
-     * Writes a value to the stream
-     * @param value The value to write to the stream
-     */
     public void writeValue() {
 
     }

@@ -118,14 +118,6 @@ public class SiloGraphic extends GridPane {
     }
 
     /**
-     * Sets the text of the LAST variable
-     * @param value the value to set the LAST variable to
-     */
-    public void setLastVariable(String value) {
-        variableLabels[2].setText(value);
-    }
-
-    /**
      * Sets the text of the MODE variable
      * @param value the value to set the MODE variable to
      */

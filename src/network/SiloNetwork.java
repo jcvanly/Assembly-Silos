@@ -114,17 +114,8 @@ public class SiloNetwork {
 
 
     public void sendValue(int r, int c, String port, int value) throws InterruptedException {
-        SynchronousQueue<Integer> queue = grid.getQueue(r , c);;
+        SynchronousQueue<Integer> queue = grid.getQueue(r , c);
         queue.put(value);
-    }
-
-
-    public Stream getInputStream(int index) {
-        return inputStreams.get(index);
-    }
-
-    public Stream getOutputStream(int index) {
-        return outputStreams.get(index);
     }
 
     public List<Stream> getInputStreams() {

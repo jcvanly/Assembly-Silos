@@ -5,10 +5,6 @@ import network.SiloState;
 public class Jump implements Instruction {
     private final int jumpToInstructionIndex;
 
-    public Jump(int jumpToInstructionIndex) {
-        this.jumpToInstructionIndex = jumpToInstructionIndex;
-    }
-
     public Jump(String jumpToInstructionIndexStr) {
         this.jumpToInstructionIndex = Integer.parseInt(jumpToInstructionIndexStr);
     }

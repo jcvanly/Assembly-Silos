@@ -83,6 +83,7 @@ public class AssemblySilosGUI extends Application {
         for (int row = 0; row < gridRows; row++) {
             for (int col = 0; col < gridCols; col++) {
                 if (row == 0 || row == gridRows - 1 || col == 0 || col == gridCols - 1) {
+                    //do nothing
                 } else {
                     String program;
                     if (counter >= fileData.siloInstructions.size()) {

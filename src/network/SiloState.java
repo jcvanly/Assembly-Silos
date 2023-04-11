@@ -3,11 +3,8 @@ package network;
 import gui.SiloGraphic;
 import commands.Instruction;
 import javafx.application.Platform;
-
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Phaser;
 
 /**
