@@ -1,7 +1,6 @@
 package network;
 
 import commands.*;
-import network.Stream;
 
 import java.io.*;
 import java.util.*;

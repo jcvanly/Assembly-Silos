@@ -1,6 +1,5 @@
 package gui;
 
-import commands.Instruction;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -17,8 +16,6 @@ import network.SiloState;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
 
 public class AssemblySilosGUI extends Application {
 
@@ -44,7 +41,7 @@ public class AssemblySilosGUI extends Application {
         fileChooser.setTitle("Choose Input File");
         File inputFile = fileChooser.showOpenDialog(primaryStage);
         if (inputFile != null) {
-            Parser.InputFileData fileData = null;
+            Parser.InputFileData fileData;
             try {
                 fileData = inputParser.parseInputFile(inputFile.getPath());
             } catch (IOException e) {
@@ -109,9 +106,7 @@ public class AssemblySilosGUI extends Application {
 
         stopButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         stopButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
-        stopButton.setOnAction(event -> {
-            network.resetSilos();
-        });
+        stopButton.setOnAction(event -> network.resetSilos());
 
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(startButton, pauseButton, stopButton);
