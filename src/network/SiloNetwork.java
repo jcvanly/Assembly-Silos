@@ -1,6 +1,5 @@
 package network;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.SynchronousQueue;
@@ -92,18 +91,10 @@ public class SiloNetwork {
         SynchronousQueue<Integer> queue;
         int value;
         switch (port) {
-            case "UP" -> {
-                queue = grid.getQueue(r, c);
-            }
-            case "DOWN" -> {
-                queue = grid.getQueue(r + 1, c);
-            }
-            case "LEFT" -> {
-                queue = grid.getQueue(r, c - 1);
-            }
-            case "RIGHT" -> {
-                queue = grid.getQueue(r, c + 1);
-            }
+            case "UP" -> queue = grid.getQueue(r, c);
+            case "DOWN" -> queue = grid.getQueue(r + 1, c);
+            case "LEFT" -> queue = grid.getQueue(r, c - 1);
+            case "RIGHT" -> queue = grid.getQueue(r, c + 1);
             default ->
                     throw new IllegalArgumentException("Invalid port: " + port);
         }
