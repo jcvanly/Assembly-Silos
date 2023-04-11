@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
@@ -128,7 +129,7 @@ public class AssemblySilosGUI extends Application {
             StreamGraphic streamGraphic = stream.getStreamGraphic();
             streamGraphic.setStreamLabel("OUT." + (char)('A' + i));
             streamsBox.getChildren().add(streamGraphic);
-
+            GridPane.setHalignment(streamGraphic.getStreamLabel(), HPos.CENTER);
             gridPane.add(streamGraphic.getStreamLabel(), stream.getRow()+1, stream.getCol()+1);
         }
 
@@ -199,7 +200,6 @@ public class AssemblySilosGUI extends Application {
     private GridPane createGridPane() {
         GridPane gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: black;");
-        GridPane.setHalignment(gridPane, HPos.CENTER);
         return gridPane;
     }
 

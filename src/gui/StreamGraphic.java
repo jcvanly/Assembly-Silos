@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
@@ -26,7 +27,7 @@ public class StreamGraphic extends VBox {
 
         streamTextArea.setStyle("-fx-control-inner-background: black; -fx-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-border-color: white;");
         streamLabel.setStyle("-fx-text-fill: white;");
-        streamLabel.setTextAlignment(TextAlignment.CENTER);
+        streamLabel.setAlignment(Pos.CENTER);
         streamHeaderLabel.setStyle("-fx-text-fill: white;");
         streamTextArea.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         streamLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
