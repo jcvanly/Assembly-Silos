@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Phaser;
 
 /**
  * Represents the state of a silo
@@ -18,7 +19,7 @@ public class SiloState {
     private final int row;
     private final int col;
     private final SiloNetwork network;
-    private static CyclicBarrier barrier;
+    private static Phaser phaser;
     private final SiloGraphic siloGraphic;
     private Interpreter interpreter;
     private final Parser parser;
@@ -36,7 +37,7 @@ public class SiloState {
         instructionIndex = 0;
         this.row = row;
         this.col = col;
-        barrier = network.getBarrier();
+        phaser = network.getPhaser();
         this.network = network;
 
         parser = new Parser();
@@ -59,11 +60,7 @@ public class SiloState {
      * Waits for all silos to reach this point.
      */
     public static void waitForSynchronization() {
-        try {
-            barrier.await();
-        } catch (InterruptedException | BrokenBarrierException e) {
-            e.printStackTrace();
-        }
+        phaser.arriveAndAwaitAdvance();
     }
 
     /**
@@ -74,7 +71,13 @@ public class SiloState {
      */
     public int readFromPort(String port) throws InterruptedException {
         Platform.runLater(() -> siloGraphic.setModeVariable("READ"));
-        return network.getValue(row, col, port);
+        phaser.arriveAndDeregister();
+        //silo attempting to read from port print message
+        System.out.println("Silo " + row + ", " + col + " attempting to read from " + port);
+        int value = network.receiveValue(row, col, port);
+        phaser.register();
+        return value;
+
     }
 
     /**
@@ -86,7 +89,11 @@ public class SiloState {
     public void writeToPort(String port, int value) throws InterruptedException {
         Platform.runLater(() -> siloGraphic.setModeVariable("WRITE"));
         Platform.runLater(() -> siloGraphic.updateTransferValue(value, port));
-        network.setValue(row, col, port, value);
+        phaser.arriveAndDeregister();
+        Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
+        System.out.println("Silo " + row + ", " + col + " sent " + value + " to " + port);
+        network.sendValue(row, col, port, value);
+        phaser.register();
     }
 
     /**
@@ -117,6 +124,7 @@ public class SiloState {
     }
 
     public void setRegisterValue(String key, int value) {
+        Platform.runLater(() -> siloGraphic.setModeVariable("WRITE"));
         if (key.equalsIgnoreCase("ACC")) {
             acc = value;
         } else if (key.equalsIgnoreCase("BAK")) {
@@ -124,6 +132,10 @@ public class SiloState {
         } else {
             throw new IllegalArgumentException("Invalid register: " + key);
         }
+    }
+
+    public void noopMethod() {
+        Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
     }
 
     public int getAcc() {

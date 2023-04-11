@@ -68,6 +68,7 @@ public class Interpreter {
             siloState.setInstructionIndex(0);
         }
 
+
     }
 
     public void setRunning(boolean running) {
