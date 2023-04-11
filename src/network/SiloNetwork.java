@@ -89,7 +89,6 @@ public class SiloNetwork {
 
     public int receiveValue(int r, int c, String port) throws InterruptedException {
         for (Stream inputStream : inputStreams) {
-            System.out.println(isSiloNextToStream(r, c, inputStream.getRow(), inputStream.getCol(), port));
             if (isSiloNextToStream(r, c, inputStream.getRow(), inputStream.getCol(), port)) {
                 return inputStream.getNextValue();
             }
@@ -109,7 +108,6 @@ public class SiloNetwork {
     }
 
     public void sendValue(int r, int c, String port, int value) throws InterruptedException {
-        System.out.println("Silo " + r + "," + c + " sending to " + port);
         for (Stream outputStream : outputStreams) {
             if (isSiloNextToStream(r, c, outputStream.getRow(), outputStream.getCol(), port)) {
                 outputStream.addValue(value);

@@ -51,7 +51,6 @@ public class Stream {
     public int getNextValue() {
         if (isInput) {
             int value = values.get(currentIndex);
-            System.out.println("Getting value " + value);
             currentIndex = (currentIndex + 1) % values.size();
             return value;
         } else {
