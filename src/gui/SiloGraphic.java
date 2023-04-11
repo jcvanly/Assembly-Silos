@@ -1,8 +1,13 @@
 package gui;
 
 import javafx.beans.binding.Bindings;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Label;
@@ -10,30 +15,81 @@ import javafx.scene.text.Font;
 
 import java.util.concurrent.Callable;
 
+import static javafx.scene.layout.StackPane.setMargin;
+import static javafx.scene.layout.TilePane.setAlignment;
+
 /**
  * A visual representation of a Silo
  */
-public class SiloGraphic extends Pane {
+public class SiloGraphic extends GridPane {
+    private Pane mainSiloPane;
     private Rectangle outerRectangle;
     private Rectangle[] innerSquares;
     private Label[] variableLabels;
     private TextArea codeArea;
+    private Label upLabel;
+    private Label downLabel;
+    private Label leftLabel;
+    private Label rightLabel;
 
     /**
      * Creates a Silo object
      */
     public SiloGraphic() {
+        //set h and v gap to 25px
+        setHgap(10);
+        setVgap(10);
+
+        mainSiloPane = new Pane();
         createOuterRectangle();
         createInnerSquaresAndLabels();
         createCodeArea();
+        createTransferValueLabels();
+        add(mainSiloPane, 1, 1);
     }
+
+    private void createTransferValueLabels() {
+        upLabel = new Label(" >");
+        downLabel = new Label("< ");
+        leftLabel = new Label("< ");
+        rightLabel = new Label(" >");
+
+        //rotate up and down labels 90 degrees
+        upLabel.setRotate(-90);
+        downLabel.setRotate(-90);
+
+        upLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        downLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        leftLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        rightLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+
+        upLabel.setTextFill(Color.WHITE);
+        downLabel.setTextFill(Color.WHITE);
+        leftLabel.setTextFill(Color.WHITE);
+        rightLabel.setTextFill(Color.WHITE);
+
+
+        add(upLabel, 1, 0);
+        add(downLabel, 1, 2);
+        add(leftLabel, 0, 1);
+        add(rightLabel, 2, 1);
+
+        //center the lables in their respecive areas
+        GridPane.setHalignment(upLabel, HPos.CENTER);
+        GridPane.setHalignment(downLabel, HPos.CENTER);
+
+    }
+
+
+
+
 
     /**
      * Sets the text of the ACC variable
      * @param value the value to set the ACC variable to
      */
     public void setAccVariable(int value) {
-        variableLabels[0].setText(""+value);
+        variableLabels[0].setText(String.valueOf(value));
     }
 
     /**
@@ -81,7 +137,7 @@ public class SiloGraphic extends Pane {
         outerRectangle.setStroke(Color.WHITE);
         outerRectangle.setStrokeWidth(5);
 
-        getChildren().add(outerRectangle);
+        mainSiloPane.getChildren().add(outerRectangle);
     }
 
     /**
@@ -106,7 +162,7 @@ public class SiloGraphic extends Pane {
             innerSquares[i].layoutXProperty().bind(outerRectangle.widthProperty().subtract(innerSquares[i].widthProperty()));
             innerSquares[i].layoutYProperty().bind(outerRectangle.heightProperty().multiply(i).divide(4));
 
-            getChildren().add(innerSquares[i]);
+            mainSiloPane.getChildren().add(innerSquares[i]);
 
             innerSquareLabels[i] = new Label(labelTexts[i]);
             innerSquareLabels[i].setTextFill(Color.web("#888888"));
@@ -125,7 +181,7 @@ public class SiloGraphic extends Pane {
                 }
             }, innerSquares[i].widthProperty()));
 
-            getChildren().add(innerSquareLabels[i]);
+            mainSiloPane.getChildren().add(innerSquareLabels[i]);
 
             variableLabels[i] = new Label(defaultVariableTexts[i]);
             variableLabels[i].setTextFill(Color.WHITE);
@@ -140,7 +196,7 @@ public class SiloGraphic extends Pane {
                             innerSquares[index].widthProperty().divide(4).doubleValue());
                 }
             }, innerSquares[i].widthProperty()));
-            getChildren().add(variableLabels[i]);
+            mainSiloPane.getChildren().add(variableLabels[i]);
         }
     }
 
@@ -158,7 +214,7 @@ public class SiloGraphic extends Pane {
 
         codeArea.fontProperty().bind(variableLabels[0].fontProperty());
 
-        getChildren().add(codeArea);
+        mainSiloPane.getChildren().add(codeArea);
 
         for (Rectangle innerSquare : innerSquares) {
             codeArea.layoutXProperty().addListener((observable, oldValue, newValue) -> {

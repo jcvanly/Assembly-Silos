@@ -78,6 +78,7 @@ public class SiloState {
      * @throws InterruptedException
      */
     public int readFromPort(String port) throws InterruptedException {
+        Platform.runLater(() -> siloGraphic.setModeVariable("READ"));
         return network.getValue(row, col, port);
     }
 
@@ -88,6 +89,8 @@ public class SiloState {
      * @throws InterruptedException
      */
     public void writeToPort(String port, int value) throws InterruptedException {
+        Platform.runLater(() -> siloGraphic.setModeVariable("WRITE"));
+        //Platform.runLater(() -> siloGraphic.updateTransferValue(value, port));
         network.setValue(row, col, port, value);
     }
 
@@ -157,30 +160,38 @@ public class SiloState {
     }
 
     public void setCode(String currentCode) {
+        if (thread != null && thread.isAlive()) {
+            interpreter.toggleExecution();
+        }
         siloGraphic.setCodeArea(currentCode);
         List<Instruction> instructions = parser.parse(currentCode);
         setInstructions(instructions);
     }
 
     public void setInstructions(List<Instruction> instructions) {
-        interpreter = new Interpreter(this, instructions);
-        thread = new Thread(() -> {
-            try {
-                interpreter.run();
-            } catch (InterruptedException | BrokenBarrierException e) {
-                e.printStackTrace();
-            }
-        });
+        if (thread != null && thread.isAlive()) {
+            interpreter.setInstructions(instructions);
+            interpreter.toggleExecution();
+        } else {
+            interpreter = new Interpreter(this, instructions);
+            thread = new Thread(() -> {
+                try {
+                    interpreter.run();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    System.out.println("Thread interrupted, shutting down");
+                }
+            });
+        }
     }
 
     public void updateInstructionsFromGraphic() {
         String code = siloGraphic.getCodeArea();
-        System.out.println(code);
         setCode(code);
     }
 
     public void toggleExecution() {
         interpreter.toggleExecution();
+        Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
     }
 
     public void step() throws InterruptedException {

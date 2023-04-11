@@ -18,13 +18,5 @@ public class Grid {
     public SiloState getSilo(int row, int col) {
         return silos[row][col];
     }
-
-    public int getNumRows() {
-        return numRows;
-    }
-
-    public int getNumCols() {
-        return numCols;
-    }
 }
 

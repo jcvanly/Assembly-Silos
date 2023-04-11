@@ -11,8 +11,8 @@ import java.util.concurrent.BrokenBarrierException;
  */
 public class Interpreter {
     private final SiloState siloState;
-    private final List<Instruction> instructions;
-    private volatile boolean isRunning = false;
+    private List<Instruction> instructions;
+    private boolean isRunning = false;
 
     /**
      * Creates a new interpreter.
@@ -71,4 +71,9 @@ public class Interpreter {
     public void toggleExecution() {
         isRunning = !isRunning;
     }
+
+    public void setInstructions(List<Instruction> instructions) {
+        this.instructions = instructions;
+    }
+
 }

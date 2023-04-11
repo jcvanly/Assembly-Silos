@@ -28,25 +28,21 @@ public class SiloNetwork {
             case "UP" -> {
                 neighborSilo = grid.getSilo(r - 1, c);
                 value = neighborSilo.getAcc();
-                //System.out.println(grid.getSilo(r,c).getName() + " getting ACC from " + neighborSilo.getName());
                 return value;
             }
             case "DOWN" -> {
                 neighborSilo = grid.getSilo(r + 1, c);
                 value = neighborSilo.getAcc();
-                //System.out.println(grid.getSilo(r,c).getName() + " getting ACC from " + neighborSilo.getName());
                 return value;
             }
             case "LEFT" -> {
                 neighborSilo = grid.getSilo(r, c - 1);
                 value = neighborSilo.getAcc();
-                //System.out.println(grid.getSilo(r,c).getName() + " getting ACC from " + neighborSilo.getName());
                 return value;
             }
             case "RIGHT" -> {
                 neighborSilo = grid.getSilo(r, c + 1);
                 value = neighborSilo.getAcc();
-                //System.out.println(grid.getSilo(r,c).getName() + " getting ACC from " + neighborSilo.getName());
                 return value;
             }
             default -> {
@@ -60,26 +56,22 @@ public class SiloNetwork {
         switch (port) {
             case "UP" -> {
                 neighborSilo = grid.getSilo(r - 1, c);
-                //System.out.println(grid.getSilo(r,c).getName() +" writing to " + neighborSilo.getName());
                 neighborSilo.setAcc(value);
             }
             case "DOWN" -> {
                 neighborSilo = grid.getSilo(r + 1, c);
-                //System.out.println(grid.getSilo(r,c).getName() +" writing to" + neighborSilo.getName());
                 neighborSilo.setAcc(value);
             }
             case "LEFT" -> {
                 neighborSilo = grid.getSilo(r, c - 1);
-                //System.out.println(grid.getSilo(r,c).getName() +" writing to" + neighborSilo.getName());
                 neighborSilo.setAcc(value);
             }
             case "RIGHT" -> {
                 neighborSilo = grid.getSilo(r, c + 1);
-                //System.out.println(grid.getSilo(r,c).getName() +" writing to" + neighborSilo.getName());
                 neighborSilo.setAcc(value);
             }
             default -> {
-                throw new IllegalArgumentException("Invalid port: " + port);
+                System.out.println("Invalid port: " + port);
             }
         }
     }
@@ -87,7 +79,5 @@ public class SiloNetwork {
     public SiloState getSiloState(int row, int col) {
         return grid.getSilo(row, col);
     }
-
-
 }
 
