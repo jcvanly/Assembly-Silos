@@ -22,5 +22,13 @@ public class Grid {
         }
         return silos[row][col];
     }
+
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public int getNumCols() {
+        return numCols;
+    }
 }
 

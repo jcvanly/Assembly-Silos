@@ -29,6 +29,8 @@ public class AssemblySilosGUI extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        String input = "2 2 NOOP END MOVE 5 ACC SAVE ADD DOWN END NOOP END MOVE 5 ACC END INPUT -1 1 10 11 12 13 END OUTPUT 1 1 END";
+
         HBox root = new HBox();
         root.setStyle("-fx-background-color: black;");
 
@@ -60,13 +62,7 @@ public class AssemblySilosGUI extends Application {
         startButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
 
         startButton.setOnAction(e -> {
-            for (int row = 0; row < ROWS; row++) {
-                for (int col = 0; col < COLS; col++) {
-                    SiloState silo = network.getSiloState(row, col);
-                    silo.updateInstructionsFromGraphic();
-                    silo.toggleExecution(true);
-                }
-            }
+            network.startSilos();
             pauseButton.setText("Pause");
             isPaused = false;
         });
@@ -79,20 +75,12 @@ public class AssemblySilosGUI extends Application {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
                     if (!isPaused) {
-                        SiloState silo = network.getSiloState(row, col);
-                        silo.toggleExecution(false);
+                        network.stopSilos();
                         isPaused = true;
                         pauseButton.setText("Step");
                     } else {
-                        SiloState silo = network.getSiloState(row, col);
-                        try {
-                            silo.step();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                        network.stepSilos();
                     }
-
-
                 }
             }
         });
@@ -101,12 +89,7 @@ public class AssemblySilosGUI extends Application {
         stopButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         stopButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
         stopButton.setOnAction(event -> {
-            for (int row = 0; row < ROWS; row++) {
-                for (int col = 0; col < COLS; col++) {
-                    SiloState silo = network.getSiloState(row, col);
-                    silo.reset();
-                }
-            }
+            network.resetSilos();
         });
 
         HBox buttonBox = new HBox();

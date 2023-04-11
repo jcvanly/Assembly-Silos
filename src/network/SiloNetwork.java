@@ -17,6 +17,50 @@ public class SiloNetwork {
         return siloState;
     }
 
+
+    public void startSilos() {
+        for (int r = 0; r < grid.getNumRows(); r++) {
+            for (int c = 0; c < grid.getNumCols(); c++) {
+                SiloState siloState = grid.getSilo(r, c);
+                siloState.updateInstructionsFromGraphic();
+                siloState.toggleExecution(true);
+            }
+        }
+    }
+
+
+    public void stopSilos() {
+        for (int r = 0; r < grid.getNumRows(); r++) {
+            for (int c = 0; c < grid.getNumCols(); c++) {
+                SiloState siloState = grid.getSilo(r, c);
+                siloState.toggleExecution(false);
+            }
+        }
+    }
+
+    public void resetSilos() {
+        for (int r = 0; r < grid.getNumRows(); r++) {
+            for (int c = 0; c < grid.getNumCols(); c++) {
+                SiloState siloState = grid.getSilo(r, c);
+                siloState.reset();
+            }
+        }
+    }
+
+
+    public void stepSilos() {
+        for (int r = 0; r < grid.getNumRows(); r++) {
+            for (int c = 0; c < grid.getNumCols(); c++) {
+                SiloState siloState = grid.getSilo(r, c);
+                try {
+                    siloState.step();
+                } catch (InterruptedException e) {
+                    System.out.println("Interrupted Exception");
+                }
+            }
+        }
+    }
+
     public CyclicBarrier getBarrier() {
         return barrier;
     }
