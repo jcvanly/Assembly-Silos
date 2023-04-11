@@ -1,6 +1,8 @@
 package commands;
 
-public class Label {
+import network.SiloState;
+
+public class Label implements Instruction {
     private final String name;
     private final int instructionIndex;
 
@@ -15,5 +17,10 @@ public class Label {
 
     public int getInstructionIndex() {
         return instructionIndex;
+    }
+
+    @Override
+    public void execute(SiloState currentState) throws InterruptedException {
+        // do nothing
     }
 }

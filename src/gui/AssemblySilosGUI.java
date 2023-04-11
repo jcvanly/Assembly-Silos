@@ -85,8 +85,6 @@ public class AssemblySilosGUI extends Application {
             isPaused = false;
         });
 
-
-
         pauseButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         pauseButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
         pauseButton.setOnAction(event -> {
@@ -103,7 +101,6 @@ public class AssemblySilosGUI extends Application {
             }
         });
 
-
         stopButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         stopButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
         stopButton.setOnAction(event -> network.resetSilos());
@@ -114,7 +111,6 @@ public class AssemblySilosGUI extends Application {
         buttonBox.setSpacing(20);
 
         root.getChildren().addAll(buttonBox, gridPane);
-
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

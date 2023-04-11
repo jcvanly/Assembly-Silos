@@ -23,7 +23,12 @@ public class Parser {
         instructionFactories.put("ADD", tokens -> new Add(tokens[1]));
         instructionFactories.put("SUB", tokens -> new Sub(tokens[1]));
         instructionFactories.put("NEGATE", Negate::new);
-        // commands.Add more instruction factories here
+        instructionFactories.put("JUMP", tokens -> new Jump(tokens[1]));
+        instructionFactories.put("JEZ", tokens -> new Jez(tokens[1]));
+        instructionFactories.put("JNZ", tokens -> new Jnz(tokens[1]));
+        instructionFactories.put("JGZ", tokens -> new Jgz(tokens[1]));
+        instructionFactories.put("JLZ", tokens -> new Jlz(tokens[1]));
+        instructionFactories.put("JRO", tokens -> new Jro(tokens[1]));
     }
 
     /**
@@ -73,7 +78,6 @@ public class Parser {
                 instructionIndex++;
             }
         }
-
         return instructions;
     }
 

@@ -1,6 +1,5 @@
 package network;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.SynchronousQueue;
 
@@ -64,7 +63,6 @@ public class SiloNetwork {
         }
     }
 
-
     public synchronized void stepSilos() {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
@@ -83,7 +81,7 @@ public class SiloNetwork {
     }
 
     public int receiveValue(int r, int c, String port) throws InterruptedException {
-        SynchronousQueue<Integer> queue = grid.getQueue(r, c);
+        SynchronousQueue<Integer> queue;
         int value;
         switch (port) {
             case "UP" -> {
@@ -101,7 +99,6 @@ public class SiloNetwork {
             default ->
                     throw new IllegalArgumentException("Invalid port: " + port);
         }
-        System.out.println("queue: " + queue);
         value = queue.take();
         return value;
     }

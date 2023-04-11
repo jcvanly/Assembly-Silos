@@ -47,13 +47,7 @@ public class Interpreter {
                     break;
                 }
 
-
-                //Let the siloState know, its values have been transferred, so it can update the GUI
-                siloState.setValuesChanged(true);
-
                 SiloState.waitForSynchronization();
-            } else {
-                Thread.sleep(100);
             }
         }
     }
@@ -68,7 +62,7 @@ public class Interpreter {
             siloState.setInstructionIndex(0);
         }
 
-
+        SiloState.waitForSynchronization();
     }
 
     public void setRunning(boolean running) {
@@ -79,4 +73,7 @@ public class Interpreter {
         this.instructions = instructions;
     }
 
+    public int getInstructionSize() {
+        return instructions.size();
+    }
 }

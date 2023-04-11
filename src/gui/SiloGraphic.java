@@ -248,14 +248,12 @@ public class SiloGraphic extends GridPane {
         }
     }
 
-    public void setValuesChanged(boolean b) {
-        if (b) {
-            Platform.runLater(() -> {
-                upLabel.setVisible(false);
-                downLabel.setVisible(false);
-                leftLabel.setVisible(false);
-                rightLabel.setVisible(false);
-            });
+    public void setTransferLabelVisible(String direction, boolean b) {
+        switch (direction) {
+            case "UP" -> upLabel.setVisible(b);
+            case "DOWN" -> downLabel.setVisible(b);
+            case "LEFT" -> leftLabel.setVisible(b);
+            case "RIGHT" -> rightLabel.setVisible(b);
         }
     }
 }
