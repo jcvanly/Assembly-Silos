@@ -21,7 +21,7 @@ public class SiloState {
     private static CyclicBarrier barrier;
     private final SiloGraphic siloGraphic;
     private Interpreter interpreter;
-    private Parser parser;
+    private final Parser parser;
     private List<Instruction> instructions;
     private Thread thread;
 
@@ -161,7 +161,7 @@ public class SiloState {
 
     public void setCode(String currentCode) {
         if (thread != null && thread.isAlive()) {
-            interpreter.toggleExecution();
+            interpreter.setRunning(false);
         }
         siloGraphic.setCodeArea(currentCode);
         List<Instruction> instructions = parser.parse(currentCode);
@@ -171,11 +171,13 @@ public class SiloState {
     public void setInstructions(List<Instruction> instructions) {
         if (thread != null && thread.isAlive()) {
             interpreter.setInstructions(instructions);
-            interpreter.toggleExecution();
+            interpreter.setRunning(true);
         } else {
             interpreter = new Interpreter(this, instructions);
+            interpreter.setRunning(true);
             thread = new Thread(() -> {
                 try {
+
                     interpreter.run();
                 } catch (InterruptedException | BrokenBarrierException e) {
                     System.out.println("Thread interrupted, shutting down");
@@ -189,8 +191,8 @@ public class SiloState {
         setCode(code);
     }
 
-    public void toggleExecution() {
-        interpreter.toggleExecution();
+    public void toggleExecution(boolean running) {
+        interpreter.setRunning(running);
         Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
     }
 
@@ -201,4 +203,13 @@ public class SiloState {
     public void setValuesChanged(boolean b) {
         siloGraphic.setValuesChanged(b);
     }
+
+    public void reset() {
+        interpreter.setRunning(false);
+        instructionIndex = 0;
+        setValuesChanged(true);
+        setAcc(0);
+        setBak(0);
+    }
+
 }

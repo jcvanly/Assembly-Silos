@@ -70,8 +70,8 @@ public class Interpreter {
         }
     }
 
-    public void toggleExecution() {
-        isRunning = !isRunning;
+    public void setRunning(boolean running) {
+        isRunning = running;
     }
 
     public void setInstructions(List<Instruction> instructions) {

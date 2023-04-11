@@ -58,7 +58,19 @@ public class AssemblySilosGUI extends Application {
                 for (int col = 0; col < COLS; col++) {
                     SiloState silo = network.getSiloState(row, col);
                     silo.updateInstructionsFromGraphic();
-                    silo.toggleExecution();
+                    silo.toggleExecution(true);
+                }
+            }
+        });
+
+        Button pauseButton = new Button("Pause");
+        pauseButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
+        pauseButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
+        pauseButton.setOnAction(event -> {
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    SiloState silo = network.getSiloState(row, col);
+                    silo.toggleExecution(false);
                 }
             }
         });
@@ -70,29 +82,13 @@ public class AssemblySilosGUI extends Application {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
                     SiloState silo = network.getSiloState(row, col);
-                    silo.toggleExecution();
-                }
-            }
-        });
-
-        Button stepButton = new Button("Step");
-        stepButton.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
-        stepButton.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
-        stepButton.setOnAction(event -> {
-            for (int row = 0; row < ROWS; row++) {
-                for (int col = 0; col < COLS; col++) {
-                    SiloState silo = network.getSiloState(row, col);
-                    try {
-                        silo.step();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    silo.reset();
                 }
             }
         });
 
         HBox buttonBox = new HBox();
-        buttonBox.getChildren().addAll(startButton, stopButton, stepButton);
+        buttonBox.getChildren().addAll(startButton, pauseButton, stopButton);
         buttonBox.setAlignment(Pos.BOTTOM_CENTER);
         buttonBox.setSpacing(20);
 

@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
  * A visual representation of a Silo
  */
 public class SiloGraphic extends GridPane {
-    private Pane mainSiloPane;
+    private final Pane mainSiloPane;
     private Rectangle outerRectangle;
     private Rectangle[] innerSquares;
     private Label[] variableLabels;
