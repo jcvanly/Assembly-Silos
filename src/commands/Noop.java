@@ -8,5 +8,6 @@ public class Noop implements Instruction {
 
     @Override
     public void execute(SiloState currentState) {
+        currentState.noopMethod();
     }
 }

@@ -1,8 +1,6 @@
 package network;
 
 import gui.StreamGraphic;
-import javafx.scene.Node;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +19,7 @@ public class Stream {
      * @param isInput True if the stream is an input stream, false if it is an output stream
      */
     public Stream(int row, int col, boolean isInput) {
+        //if row or col is negative set to 0
         this.row = row;
         this.col = col;
         this.isInput = isInput;
@@ -73,4 +72,11 @@ public class Stream {
         return values;
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
 }
