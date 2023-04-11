@@ -1,14 +1,16 @@
 package network;
 
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Phaser;
+import java.util.concurrent.SynchronousQueue;
 
 public class SiloNetwork {
     private final Grid grid;
-    private final CyclicBarrier barrier;
+    private final Phaser phaser;
 
     public SiloNetwork(int numRows, int numCols, int siloCount) {
         grid = new Grid(numRows, numCols);
-        barrier = new CyclicBarrier(siloCount);
+        phaser = new Phaser(siloCount);
     }
 
     public SiloState createSilo(int row, int col) {
@@ -17,7 +19,7 @@ public class SiloNetwork {
         return siloState;
     }
 
-    public void stopThreads() {
+    public synchronized void stopThreads() {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
@@ -27,7 +29,7 @@ public class SiloNetwork {
         }
     }
 
-    public void startSilos() {
+    public synchronized void startSilos() {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
@@ -44,7 +46,7 @@ public class SiloNetwork {
     }
 
 
-    public void stopSilos() {
+    public synchronized void stopSilos() {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
@@ -53,7 +55,7 @@ public class SiloNetwork {
         }
     }
 
-    public void resetSilos() {
+    public synchronized void resetSilos() {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
@@ -63,7 +65,7 @@ public class SiloNetwork {
     }
 
 
-    public void stepSilos() {
+    public synchronized void stepSilos() {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
@@ -76,59 +78,41 @@ public class SiloNetwork {
         }
     }
 
-    public CyclicBarrier getBarrier() {
-        return barrier;
+    public Phaser getPhaser() {
+        return phaser;
     }
 
-    public int getValue(int r, int c, String port) {
-        SiloState neighborSilo;
+    public int receiveValue(int r, int c, String port) throws InterruptedException {
+        SynchronousQueue<Integer> queue = grid.getQueue(r, c);
         int value;
         switch (port) {
             case "UP" -> {
-                neighborSilo = grid.getSilo(r - 1, c);
-                value = neighborSilo.getAcc();
-                return value;
+                queue = grid.getQueue(r, c);
             }
             case "DOWN" -> {
-                neighborSilo = grid.getSilo(r + 1, c);
-                value = neighborSilo.getAcc();
-                return value;
+                queue = grid.getQueue(r + 1, c);
             }
             case "LEFT" -> {
-                neighborSilo = grid.getSilo(r, c - 1);
-                value = neighborSilo.getAcc();
-                return value;
+                queue = grid.getQueue(r, c - 1);
             }
             case "RIGHT" -> {
-                neighborSilo = grid.getSilo(r, c + 1);
-                value = neighborSilo.getAcc();
-                return value;
+                queue = grid.getQueue(r, c + 1);
             }
+            default ->
+                    throw new IllegalArgumentException("Invalid port: " + port);
         }
-        return 0;
+        System.out.println("queue: " + queue);
+        value = queue.take();
+        return value;
     }
 
 
-    public void setValue(int r, int c, String port, int value) {
-        SiloState neighborSilo;
-        switch (port) {
-            case "UP" -> {
-                neighborSilo = grid.getSilo(r - 1, c);
-                neighborSilo.setAcc(value);
-            }
-            case "DOWN" -> {
-                neighborSilo = grid.getSilo(r + 1, c);
-                neighborSilo.setAcc(value);
-            }
-            case "LEFT" -> {
-                neighborSilo = grid.getSilo(r, c - 1);
-                neighborSilo.setAcc(value);
-            }
-            case "RIGHT" -> {
-                neighborSilo = grid.getSilo(r, c + 1);
-                neighborSilo.setAcc(value);
-            }
-        }
+
+    public void sendValue(int r, int c, String port, int value) throws InterruptedException {
+        SynchronousQueue<Integer> queue = grid.getQueue(r , c);;
+        queue.put(value);
     }
+
+
 }
 
