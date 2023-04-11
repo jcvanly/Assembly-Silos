@@ -97,9 +97,6 @@ public class SiloGraphic extends GridPane {
                 rightLabel.setText(value + " >");
                 rightLabel.setVisible(true);
             }
-            default -> {
-                System.out.println("Invalid direction");
-            }
         }
 
     }

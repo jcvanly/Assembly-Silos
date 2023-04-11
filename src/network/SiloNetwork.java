@@ -31,8 +31,14 @@ public class SiloNetwork {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
-                siloState.updateInstructionsFromGraphic();
-                siloState.toggleExecution(true);
+                if (siloState.getThread().isAlive()) {
+                    siloState.updateInstructionsFromGraphic();
+                    siloState.toggleExecution(true);
+                } else {
+                    siloState.startSilo();
+                    siloState.updateInstructionsFromGraphic();
+                    siloState.toggleExecution(true);
+                }
             }
         }
     }

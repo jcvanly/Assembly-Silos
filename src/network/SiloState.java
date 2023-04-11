@@ -56,10 +56,6 @@ public class SiloState {
         return siloGraphic;
     }
 
-    public Interpreter getInterpreter() {
-        return interpreter;
-    }
-
     /**
      * Waits for all silos to reach this point.
      */
@@ -73,9 +69,9 @@ public class SiloState {
 
     /**
      * reads from a port
-     * @param port
-     * @return
-     * @throws InterruptedException
+     * @param port The port to read from.
+     * @return The value read from the port.
+     * @throws InterruptedException If the thread is interrupted.
      */
     public int readFromPort(String port) throws InterruptedException {
         Platform.runLater(() -> siloGraphic.setModeVariable("READ"));
@@ -84,9 +80,9 @@ public class SiloState {
 
     /**
      * writes to a port
-     * @param port
-     * @param value
-     * @throws InterruptedException
+     * @param port The port to write to.
+     * @param value The value to write.
+     * @throws InterruptedException If the thread is interrupted.
      */
     public void writeToPort(String port, int value) throws InterruptedException {
         Platform.runLater(() -> siloGraphic.setModeVariable("WRITE"));
@@ -96,8 +92,8 @@ public class SiloState {
 
     /**
      * Checks if the key is a register
-     * @param key
-     * @return
+     * @param key The key to check.
+     * @return True if the key is a register, false otherwise.
      */
     public boolean isRegister(String key) {
         return key.equalsIgnoreCase("ACC") || key.equalsIgnoreCase("BAK");
@@ -105,8 +101,8 @@ public class SiloState {
 
     /**
      * Checks if the key is a port
-     * @param key
-     * @return
+     * @param key The key to check.
+     * @return True if the key is a port, false otherwise.
      */
     public boolean isPort(String key) {
         return key.equals("UP") || key.equals("DOWN") || key.equals("LEFT") || key.equals("RIGHT");
