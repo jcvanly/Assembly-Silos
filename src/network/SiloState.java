@@ -4,6 +4,7 @@ import gui.SiloGraphic;
 import commands.Instruction;
 import javafx.application.Platform;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
@@ -72,8 +73,6 @@ public class SiloState {
     public int readFromPort(String port) throws InterruptedException {
         Platform.runLater(() -> siloGraphic.setModeVariable("READ"));
         phaser.arriveAndDeregister();
-        //silo attempting to read from port print message
-        System.out.println("Silo " + row + ", " + col + " attempting to read from " + port);
         int value = network.receiveValue(row, col, port);
         phaser.register();
         return value;
@@ -91,9 +90,11 @@ public class SiloState {
         Platform.runLater(() -> siloGraphic.updateTransferValue(value, port));
         phaser.arriveAndDeregister();
         Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
-        System.out.println("Silo " + row + ", " + col + " sent " + value + " to " + port);
         network.sendValue(row, col, port, value);
+        siloGraphic.setTransferLabelVisible(port, false);
         phaser.register();
+        //Update label on the GUI
+
     }
 
     /**
@@ -126,9 +127,9 @@ public class SiloState {
     public void setRegisterValue(String key, int value) {
         Platform.runLater(() -> siloGraphic.setModeVariable("WRITE"));
         if (key.equalsIgnoreCase("ACC")) {
-            acc = value;
+            setAcc(value);
         } else if (key.equalsIgnoreCase("BAK")) {
-            bak = value;
+            setBak(value);
         } else {
             throw new IllegalArgumentException("Invalid register: " + key);
         }
@@ -207,16 +208,18 @@ public class SiloState {
         interpreter.step();
     }
 
-    public void setValuesChanged(boolean b) {
-        siloGraphic.setValuesChanged(b);
-    }
-
     public void reset() {
         interpreter.setRunning(false);
         instructionIndex = 0;
-        setValuesChanged(true);
         setAcc(0);
         setBak(0);
     }
 
+    public int getAccumulator() {
+        return acc;
+    }
+
+    public int getInstructionSize() {
+        return interpreter.getInstructionSize();
+    }
 }
