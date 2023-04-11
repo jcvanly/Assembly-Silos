@@ -1,9 +1,6 @@
 package network;
 
 import commands.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
 import java.io.*;
 import java.util.*;
 
@@ -53,7 +50,7 @@ public class Parser {
             if (command.startsWith(":") && command.endsWith(":")) {
                 // Found a label
                 String labelName = command.substring(1, command.length() - 1);
-                labels.put(labelName, new Label(labelName, instructionIndex));
+                labels.put(labelName, new Label(instructionIndex));
             } else {
                 // Found an instruction
                 instructionIndex++;

@@ -3,16 +3,11 @@ package commands;
 import network.SiloState;
 
 public class Label implements Instruction {
-    private final String name;
     private final int instructionIndex; // the index of the instruction within a silo, starts with 0
 
-    public Label(String name, int instructionIndex) {
-        this.name = name;
-        this.instructionIndex = instructionIndex;
-    }
+    public Label(int instructionIndex) {
 
-    public String getName() {
-        return name;
+        this.instructionIndex = instructionIndex;
     }
 
     public int getInstructionIndex() {

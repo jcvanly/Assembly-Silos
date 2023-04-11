@@ -1,5 +1,6 @@
 package network;
 
+import gui.StreamGraphic;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class Stream {
     private final boolean isInput;
     private final List<Integer> values;
     private int currentIndex;
+    private final StreamGraphic streamGraphic;
 
     /***
      * Creates a new stream
@@ -22,20 +24,30 @@ public class Stream {
         this.isInput = isInput;
         this.values = new ArrayList<>();
         this.currentIndex = 0;
+        streamGraphic = new StreamGraphic(this);
     }
 
-    /***
-     * Adds a value to the stream
-     * @param value
-     */
     public void addValue(int value) {
         values.add(value);
+        streamGraphic.updateGraphic();
     }
 
-    /***
-     * Gets next value from the stream
-     * @return The next value in the stream
-     */
+    public StreamGraphic getStreamGraphic() {
+        return streamGraphic;
+    }
+
+    public List<Integer> getValues() {
+        return values;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
     public int getNextValue() {
         if (isInput) {
             int value = values.get(currentIndex);
@@ -44,13 +56,5 @@ public class Stream {
         } else {
             throw new UnsupportedOperationException("Cannot get value from output stream");
         }
-    }
-
-    /***
-     * Writes a value to the stream
-     * @param value The value to write to the stream
-     */
-    public void writeValue() {
-
     }
 }
