@@ -3,6 +3,7 @@ package network;
 import commands.*;
 import network.Stream;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -94,15 +95,15 @@ public class Parser {
         Instruction create(String[] tokens);
     }
 
-    public static class InputTextData {
+    public static class InputFileData {
         public int numRows;
         public int numCols;
-        public List<List<Instruction>> siloInstructions;
+        public List<String> siloInstructions;
         public List<Stream> inputStreams;
         public List<Stream> outputStreams;
 
-        public InputTextData(int numRows, int numCols, List<List<Instruction>> siloInstructions,
-                          List<Stream> inputStreams, List<Stream> outputStreams) {
+        public InputFileData(int numRows, int numCols, List<String> siloInstructions,
+                             List<Stream> inputStreams, List<Stream> outputStreams) {
             this.numRows = numRows;
             this.numCols = numCols;
             this.siloInstructions = siloInstructions;
@@ -111,61 +112,48 @@ public class Parser {
         }
     }
 
-    /**
-     * Parses a program into a list of instructions.
-     *
-     * @param input the program to parse
-     * @return the list of instructions
-     */
-    public InputTextData parseInputText(String input) {
-        Scanner scanner = new Scanner(input);
-        int numRows = scanner.nextInt();
-        int numCols = scanner.nextInt();
 
-        List<List<Instruction>> siloInstructions = new ArrayList<>();
+    public InputFileData parseInputFile(String filePath) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
+        int numRows = 0;
+        int numCols = 0;
+
+        List<String> siloInstructions = new ArrayList<>();
         List<Stream> inputStreams = new ArrayList<>();
         List<Stream> outputStreams = new ArrayList<>();
+        StringBuilder currentSilo = new StringBuilder();
 
-        while (scanner.hasNext()) {
-            String token = scanner.next();
-            if (token.equals("END")) {
-                List<Instruction> instructions = new ArrayList<>();
-                while (scanner.hasNext() && !token.equals("END")) {
-                    token = scanner.next();
-                    if (!token.equals("END")) {
-                        String[] tokens = new String[]{token};
-                        if (instructionFactories.containsKey(token)) {
-                            InstructionFactory factory = instructionFactories.get(token);
-                            Instruction instruction = factory.create(substituteLabels(tokens, new HashMap<>()));
-                            instructions.add(instruction);
-                        } else {
-                            throw new IllegalArgumentException("Unknown command: " + token);
-                        }
-                    }
+        while ((line = reader.readLine()) != null) {
+            String[] tokens = line.split(" ");
+            if (numRows == 0 && numCols == 0) {
+                numRows = Integer.parseInt(tokens[0]);
+                numCols = Integer.parseInt(tokens[1]);
+            } else if ("INPUT".equals(tokens[0])) {
+                String[] coordinates = reader.readLine().split(" ");
+                int row = Integer.parseInt(coordinates[0]);
+                int col = Integer.parseInt(coordinates[1]);
+                Stream input = new Stream(row, col, true);
+                while (!(line = reader.readLine()).equals("END")) {
+                    input.addValue(Integer.parseInt(line));
                 }
-                siloInstructions.add(instructions);
-            } else if (token.equals("INPUT")) {
-                int x = scanner.nextInt();
-                int y = scanner.nextInt();
-                Stream inputSteam = new Stream(x, y, true);
-                while (scanner.hasNextInt()) {
-                    int value = scanner.nextInt();
-                    inputSteam.addValue(value);
-                }
-                inputStreams.add(inputSteam);
-            } else if (token.equals("OUTPUT")) {
-                int x = scanner.nextInt();
-                int y = scanner.nextInt();
-                Stream outputStream = new Stream(x, y, false);
-                outputStreams.add(outputStream);
-                scanner.next(); // Consume the "END" token
+                inputStreams.add(input);
+            } else if ("OUTPUT".equals(tokens[0])) {
+                String[] coordinates = reader.readLine().split(" ");
+                int row = Integer.parseInt(coordinates[0]);
+                int col = Integer.parseInt(coordinates[1]);
+                Stream output = new Stream(row, col, false);
+                outputStreams.add(output);
+                reader.readLine(); // Read END line
+            } else if ("END".equals(tokens[0])) {
+                siloInstructions.add(currentSilo.toString().trim());
+                currentSilo = new StringBuilder();
             } else {
-                throw new IllegalArgumentException("Unexpected token: " + token);
+                currentSilo.append(line).append("\n");
             }
         }
 
-        scanner.close();
-        return new InputTextData(numRows, numCols, siloInstructions, inputStreams, outputStreams);
+        reader.close();
+        return new InputFileData(numRows, numCols, siloInstructions, inputStreams, outputStreams);
     }
-
 }

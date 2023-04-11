@@ -1,5 +1,6 @@
 package gui;
 
+import commands.Instruction;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -7,19 +8,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import network.Parser;
 import network.SiloNetwork;
 import network.SiloState;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 
 public class AssemblySilosGUI extends Application {
 
     private static SiloNetwork network;
-    private static final int ROWS = 3;
-    private static final int COLS = 3;
-
+    private int ROWS;
+    private int COLS;
     private boolean isPaused = false;
 
     public static void main(String[] args) {
@@ -28,29 +33,45 @@ public class AssemblySilosGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        String input = "2 2 NOOP END MOVE 5 ACC SAVE ADD DOWN END NOOP END MOVE 5 ACC END INPUT -1 1 10 11 12 13 END OUTPUT 1 1 END";
-
         HBox root = new HBox();
         root.setStyle("-fx-background-color: black;");
-
         GridPane gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: black;");
 
-        network = new SiloNetwork(ROWS, COLS, COLS * ROWS);
+        Parser inputParser = new Parser();
 
-
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < ROWS; col++) {
-                String program1 = "NOOP";
-                SiloState silo = network.createSilo(row, col);
-                silo.setCode(program1);
-                gridPane.add(silo.getSiloGraphic(), col, row);
-
-                Thread thread = silo.getThread();
-                thread.start();
-
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose Input File");
+        File inputFile = fileChooser.showOpenDialog(primaryStage);
+        if (inputFile != null) {
+            Parser.InputFileData fileData = null;
+            try {
+                fileData = inputParser.parseInputFile(inputFile.getPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            ROWS = fileData.numRows;
+            COLS = fileData.numCols;
+
+            network = new SiloNetwork(ROWS, COLS, COLS * ROWS);
+
+            int counter = 0;
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    String program;
+                    if (counter >= fileData.siloInstructions.size()) {
+                        program = "";
+                    } else {
+                        program = fileData.siloInstructions.get(counter);
+                    }
+                    SiloState silo = network.createSilo(row, col);
+                    silo.setCode(program);
+                    gridPane.add(silo.getSiloGraphic(), col, row);
+                    counter++;
+                }
+            }
+        } else {
+            System.exit(0);
         }
 
         Button startButton = new Button("Start");
@@ -106,21 +127,13 @@ public class AssemblySilosGUI extends Application {
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(event -> {
-            stopThreads();
+            network.stopThreads();
             Platform.exit();
             System.exit(0);
         });
 
     }
 
-    private void stopThreads() {
-        for (int row = 0; row < ROWS; row++) {
-            for (int col = 0; col < COLS; col++) {
-                SiloState silo = network.getSiloState(row, col);
-                silo.getThread().interrupt();
-            }
-        }
-    }
 
 
 }

@@ -17,6 +17,15 @@ public class SiloNetwork {
         return siloState;
     }
 
+    public void stopThreads() {
+        for (int r = 0; r < grid.getNumRows(); r++) {
+            for (int c = 0; c < grid.getNumCols(); c++) {
+                SiloState siloState = grid.getSilo(r, c);
+                siloState.getThread().interrupt();
+
+            }
+        }
+    }
 
     public void startSilos() {
         for (int r = 0; r < grid.getNumRows(); r++) {
