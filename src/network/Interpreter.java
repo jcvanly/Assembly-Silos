@@ -59,15 +59,15 @@ public class Interpreter {
     }
 
     public void step() throws InterruptedException {
-        if (instructions.isEmpty()) return;
         Instruction currentInstruction = instructions.get(siloState.getInstructionIndex());
         currentInstruction.execute(siloState);
-
         siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
 
+        // Reset the instruction index to 0 if it reaches the end of the instructions list
         if (siloState.getInstructionIndex() >= instructions.size()) {
             siloState.setInstructionIndex(0);
         }
+
     }
 
     public void setRunning(boolean running) {

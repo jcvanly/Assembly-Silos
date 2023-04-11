@@ -16,6 +16,10 @@ public class Grid {
     }
 
     public SiloState getSilo(int row, int col) {
+        //if out of bounds return null
+        if (row < 0 || row >= numRows || col < 0 || col >= numCols) {
+            return null;
+        }
         return silos[row][col];
     }
 }
