@@ -22,6 +22,7 @@ public class SiloState {
     private Interpreter interpreter;
     private final Parser parser;
     private Thread thread;
+    private boolean threadStarted;
 
     /**
      * Creates a new SiloState.
@@ -37,13 +38,18 @@ public class SiloState {
         this.col = col;
         phaser = network.getPhaser();
         this.network = network;
+        threadStarted = false;
 
         parser = new Parser();
         siloGraphic = new SiloGraphic();
     }
 
     public void startSilo() {
-        thread.start();
+        if (!threadStarted) {
+            thread.start();
+            threadStarted = true;
+        }
+        interpreter.setRunning(true);
     }
 
     public Thread getThread() {
@@ -70,10 +76,11 @@ public class SiloState {
     public int readFromPort(String port) throws InterruptedException {
         Platform.runLater(() -> siloGraphic.setModeVariable("READ"));
         phaser.arriveAndDeregister();
+        Platform.runLater(() -> siloGraphic.setTransferLabelVisible(port, true));
         int value = network.receiveValue(row, col, port);
+        Platform.runLater(() -> siloGraphic.setTransferLabelVisible(port, false));
         phaser.register();
         return value;
-
     }
 
     /**
@@ -83,12 +90,19 @@ public class SiloState {
      * @throws InterruptedException If the thread is interrupted.
      */
     public void writeToPort(String port, int value) throws InterruptedException {
-        Platform.runLater(() -> siloGraphic.setModeVariable("WRITE"));
-        Platform.runLater(() -> siloGraphic.updateTransferValue(value, port));
+        Platform.runLater(() -> {
+            siloGraphic.setModeVariable("WRITE");
+            siloGraphic.updateTransferValue(value, port);
+            siloGraphic.setTransferLabelVisible(port,true); // Make the TransferLabel visible
+        });
         phaser.arriveAndDeregister();
-        Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
+
         network.sendValue(row, col, port, value);
-        siloGraphic.setTransferLabelVisible(port, false);
+
+        Platform.runLater(() -> {
+            siloGraphic.setModeVariable("IDLE");
+            siloGraphic.setTransferLabelVisible(port,false); // Hide the TransferLabel
+        });
         phaser.register();
     }
 

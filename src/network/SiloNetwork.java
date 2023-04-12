@@ -30,54 +30,64 @@ public class SiloNetwork {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
                 siloState.getThread().interrupt();
-
             }
         }
     }
 
     public synchronized void startSilos() {
-        for (int r = 0; r < grid.getNumRows(); r++) {
-            for (int c = 0; c < grid.getNumCols(); c++) {
-                SiloState siloState = grid.getSilo(r, c);
-                if (siloState.getThread().isAlive()) {
-                    siloState.updateInstructionsFromGraphic();
-                    siloState.toggleExecution(true);
-                } else {
-                    siloState.startSilo();
-                    siloState.updateInstructionsFromGraphic();
-                    siloState.toggleExecution(true);
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                SiloState silo = grid.getSilo(row, col);
+                if (silo != null) {
+                    silo.startSilo();
                 }
             }
         }
     }
 
-
-    public synchronized void stopSilos() {
-        for (int r = 0; r < grid.getNumRows(); r++) {
-            for (int c = 0; c < grid.getNumCols(); c++) {
-                SiloState siloState = grid.getSilo(r, c);
-                siloState.toggleExecution(false);
-            }
-        }
-    }
-
-    public synchronized void resetSilos() {
-        for (int r = 0; r < grid.getNumRows(); r++) {
-            for (int c = 0; c < grid.getNumCols(); c++) {
-                SiloState siloState = grid.getSilo(r, c);
-                siloState.reset();
+    public synchronized void pauseSilos() {
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                SiloState silo = grid.getSilo(row, col);
+                if (silo != null) {
+                    silo.toggleExecution(false);
+                }
             }
         }
     }
 
     public synchronized void stepSilos() {
-        for (int r = 0; r < grid.getNumRows(); r++) {
-            for (int c = 0; c < grid.getNumCols(); c++) {
-                SiloState siloState = grid.getSilo(r, c);
-                try {
-                    siloState.step();
-                } catch (InterruptedException e) {
-                    System.out.println("Interrupted Exception");
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                SiloState silo = grid.getSilo(row, col);
+                if (silo != null) {
+                    try {
+                        silo.step();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public synchronized void stopSilos() {
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                SiloState silo = grid.getSilo(row, col);
+                if (silo != null) {
+                    silo.toggleExecution(false);
+                }
+            }
+        }
+    }
+
+    public synchronized void resetSilos() {
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                SiloState silo = grid.getSilo(row, col);
+                if (silo != null) {
+                    silo.reset();
                 }
             }
         }

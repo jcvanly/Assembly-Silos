@@ -40,10 +40,10 @@ public class SiloGraphic extends GridPane {
     }
 
     private void createTransferValueLabels() {
-        upLabel = new Label("^ \n XXX");
-        downLabel = new Label("XXX \n v");
-        leftLabel = new Label("< XXX");
-        rightLabel = new Label("XXX >");
+        upLabel = new Label("^ \n    ");
+        downLabel = new Label("    \n v");
+        leftLabel = new Label("<    ");
+        rightLabel = new Label("    >");
 
         upLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         downLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);

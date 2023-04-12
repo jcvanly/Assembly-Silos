@@ -53,6 +53,8 @@ public class Interpreter {
     }
 
     public void step() throws InterruptedException {
+        if (!isRunning) return;
+
         Instruction currentInstruction = instructions.get(siloState.getInstructionIndex());
         currentInstruction.execute(siloState);
         siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
@@ -62,7 +64,7 @@ public class Interpreter {
             siloState.setInstructionIndex(0);
         }
 
-        SiloState.waitForSynchronization();
+        //SiloState.waitForSynchronization();
     }
 
     public void setRunning(boolean running) {
