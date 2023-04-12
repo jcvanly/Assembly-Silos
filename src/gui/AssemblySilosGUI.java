@@ -41,9 +41,9 @@ public class AssemblySilosGUI extends Application {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            ROWS = fileData.numRows;
-            COLS = fileData.numCols;
-            network = new SiloNetwork(ROWS, COLS, fileData.inputStreams, fileData.outputStreams);
+            ROWS = fileData.getNumRows();
+            COLS = fileData.getNumCols();
+            network = new SiloNetwork(ROWS, COLS, fileData.getInputStreams(), fileData.getOutputStreams());
         } else {
             System.exit(0);
         }
@@ -86,10 +86,10 @@ public class AssemblySilosGUI extends Application {
                     //do nothing
                 } else {
                     String program;
-                    if (counter >= fileData.siloInstructions.size()) {
+                    if (counter >= fileData.getSiloInstructions().size()) {
                         program = "";
                     } else {
-                        program = fileData.siloInstructions.get(counter);
+                        program = fileData.getSiloInstructions().get(counter);
                     }
                     SiloState silo = network.createSilo(row - 1, col - 1);
                     silo.setCode(program);
@@ -146,7 +146,10 @@ public class AssemblySilosGUI extends Application {
     private Button createStopButton() {
         Button stopButton = new Button("Stop");
         styleButton(stopButton);
-        stopButton.setOnAction(event -> network.resetSilos());
+        stopButton.setOnAction(event -> {
+            network.stopSilos();
+            network.resetSilos();
+        });
         return stopButton;
     }
 
@@ -154,16 +157,12 @@ public class AssemblySilosGUI extends Application {
         Button pauseButton = new Button("Pause");
         styleButton(pauseButton);
         pauseButton.setOnAction(event -> {
-            for (int row = 0; row < ROWS; row++) {
-                for (int col = 0; col < COLS; col++) {
-                    if (!isPaused) {
-                        network.stopSilos();
-                        isPaused = true;
-                        pauseButton.setText("Step");
-                    } else {
-                        network.stepSilos();
-                    }
-                }
+            if (!isPaused) {
+                network.pauseSilos();
+                pauseButton.setText("Step");
+                isPaused = true;
+            } else {
+                network.stepSilos();
             }
         });
         return pauseButton;

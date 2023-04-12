@@ -97,12 +97,12 @@ public class Parser {
         Instruction create(String[] tokens);
     }
 
-    public static class InputFileData {
-        public int numRows;
-        public int numCols;
-        public List<String> siloInstructions;
-        public List<Stream> inputStreams;
-        public List<Stream> outputStreams;
+    public class InputFileData {
+        private final int numRows;
+        private final int numCols;
+        private final List<String> siloInstructions;
+        private final List<Stream> inputStreams;
+        private final List<Stream> outputStreams;
 
         public InputFileData(int numRows, int numCols, List<String> siloInstructions,
                              List<Stream> inputStreams, List<Stream> outputStreams) {
@@ -112,6 +112,27 @@ public class Parser {
             this.inputStreams = inputStreams;
             this.outputStreams = outputStreams;
         }
+
+        public int getNumRows() {
+            return numRows;
+        }
+
+        public int getNumCols() {
+            return numCols;
+        }
+
+        public List<String> getSiloInstructions() {
+            return siloInstructions;
+        }
+
+        public List<Stream> getInputStreams() {
+            return inputStreams;
+        }
+
+        public List<Stream> getOutputStreams() {
+            return outputStreams;
+        }
+
     }
 
 
