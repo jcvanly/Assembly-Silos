@@ -15,7 +15,7 @@ public class Label implements Instruction {
     }
 
     @Override
-    public void execute(SiloState currentState) throws InterruptedException {
+    public void execute(SiloState currentState) {
         // do nothing
     }
 }
