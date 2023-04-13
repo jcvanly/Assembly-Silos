@@ -66,7 +66,6 @@ public class SiloState  {
         phaser.arriveAndDeregister();
         Platform.runLater(() -> siloGraphic.setTransferLabelVisible(port, true));
         int value = network.receiveValue(row, col, port);
-        System.out.println("Read from port: " + port + " value: " + value);
         phaser.register();
         return value;
     }
@@ -79,7 +78,6 @@ public class SiloState  {
      */
     public void writeToPort(String port, int value) throws InterruptedException {
         Platform.runLater(() -> {
-            System.out.println("Writing to port: " + port + " value: " + value);
             siloGraphic.setModeVariable("WRITE");
             siloGraphic.updateTransferValue(value, port);
             siloGraphic.setTransferLabelVisible(port,true); // Make the TransferLabel visible
