@@ -21,7 +21,6 @@ public class SiloState {
 
     private final Interpreter interpreter;
     private final Thread thread;
-    private Parser parser;
 
     /**
      * Creates a new SiloState.
@@ -67,7 +66,7 @@ public class SiloState {
         phaser.arriveAndDeregister();
         Platform.runLater(() -> siloGraphic.setTransferLabelVisible(port, true));
         int value = network.receiveValue(row, col, port);
-        Platform.runLater(() -> siloGraphic.setTransferLabelVisible(port, false));
+        System.out.println("Read from port: " + port + " value: " + value);
         phaser.register();
         return value;
     }
@@ -179,6 +178,11 @@ public class SiloState {
         instructionIndex = 0;
         setAcc(0);
         setBak(0);
+
+        siloGraphic.setTransferLabelVisible("UP", false);
+        siloGraphic.setTransferLabelVisible("DOWN", false);
+        siloGraphic.setTransferLabelVisible("LEFT", false);
+        siloGraphic.setTransferLabelVisible("RIGHT", false);
     }
 
     public int getInstructionSize() {
@@ -187,7 +191,7 @@ public class SiloState {
 
     public void startSilo() {
         String code = siloGraphic.getCodeArea();
-        parser = new Parser();
+        Parser parser = new Parser();
         List<Instruction> instructions = parser.parse(code);
         interpreter.setInstructions(instructions);
         interpreter.setRunning(true);

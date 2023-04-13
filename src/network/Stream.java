@@ -53,8 +53,20 @@ public class Stream {
             int value = values.get(currentIndex);
             currentIndex = (currentIndex + 1) % values.size();
             return value;
-        } else {
-            throw new UnsupportedOperationException("Cannot get value from output stream");
+        }
+        return 0;
+    }
+
+    public void clear() {
+        if (!isInput) {
+            values.clear();
+            streamGraphic.updateGraphic();
+        }
+    }
+
+    public void resetIndex() {
+        if (isInput) {
+            currentIndex = 0;
         }
     }
 }

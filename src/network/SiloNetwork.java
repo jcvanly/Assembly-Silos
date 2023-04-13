@@ -70,6 +70,14 @@ public class SiloNetwork {
                 SiloState silo = grid.getSilo(row, col);
                 silo.pause();
                 silo.reset();
+                //Clear output stream
+                for (Stream outputStream : outputStreams) {
+                    outputStream.clear();
+                }
+                //reset input stream index to 0
+                for (Stream inputStream : inputStreams) {
+                    inputStream.resetIndex();
+                }
             }
         }
     }
