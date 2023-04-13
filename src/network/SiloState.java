@@ -166,7 +166,7 @@ public class SiloState  {
     }
 
     public void step() {
-        interpreter.step();
+        interpreter.setStep(true);
     }
 
     public void pause() {

@@ -52,13 +52,12 @@ public class SiloNetwork {
         }
     }
 
-    public synchronized void stepSilos() {
+    public void stepSilos() {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
                 SiloState silo = grid.getSilo(row, col);
                 if (silo != null) {
                     silo.step();
-                    silo.waitForSynchronization();
                 }
             }
         }

@@ -10,6 +10,7 @@ public class Interpreter implements Runnable {
     private List<Instruction> instructions;
     private boolean isRunning = false;
     private boolean isAlive = true;
+    private boolean step = false;
     private Instruction currentInstruction;
 
 
@@ -37,6 +38,18 @@ public class Interpreter implements Runnable {
                 }
 
                 siloState.waitForSynchronization();
+            } else if (step) {
+                System.out.println("[STEPPING 1 INSTRUCTION]");
+                currentInstruction = instructions.get(siloState.getInstructionIndex());
+                currentInstruction.execute(siloState);
+                siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
+
+                if (siloState.getInstructionIndex() >= instructions.size()) {
+                    siloState.setInstructionIndex(0);
+                }
+
+                siloState.waitForSynchronization();
+                step = false;
             } else {
                 System.out.println("[SILO WAITING]");
                 try {
@@ -48,20 +61,9 @@ public class Interpreter implements Runnable {
         }
 
     }
-
-    //1 instruction from the silo must be executed then waits for all silos to reach this point
-    public void step() {
-        System.out.println("[STEPPING 1 INSTRUCTION]");
-        currentInstruction = instructions.get(siloState.getInstructionIndex());
-        currentInstruction.execute(siloState);
-
-        siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
-        if (siloState.getInstructionIndex() >= instructions.size()) {
-            siloState.setInstructionIndex(0);
-        }
-        //siloState.waitForSynchronization();
+    public void setStep(boolean step) {
+        this.step = step;
     }
-
 
     public void setRunning(boolean running) {
         isRunning = running;
