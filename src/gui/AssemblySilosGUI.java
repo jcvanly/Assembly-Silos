@@ -147,7 +147,7 @@ public class AssemblySilosGUI extends Application {
         Button stopButton = new Button("Stop");
         styleButton(stopButton);
         stopButton.setOnAction(event -> {
-            network.stopSilos();
+            network.stopSilos();.
             network.resetSilos();
         });
         return stopButton;
