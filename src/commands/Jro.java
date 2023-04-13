@@ -14,7 +14,7 @@ public class Jro implements Instruction {
         int offset;
 
         if (src.equals("ACC")) {
-            offset = currentState.getAccumulator();
+            offset = currentState.getAcc();
         } else {
             offset = Integer.parseInt(src);
         }

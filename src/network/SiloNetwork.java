@@ -29,7 +29,7 @@ public class SiloNetwork {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
-                siloState.getThread().interrupt();
+                siloState.interruptThread();
             }
         }
     }
@@ -38,9 +38,7 @@ public class SiloNetwork {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
                 SiloState silo = grid.getSilo(row, col);
-                if (silo != null) {
-                    silo.startSilo();
-                }
+                silo.startSilo();
             }
         }
     }
@@ -49,23 +47,18 @@ public class SiloNetwork {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
                 SiloState silo = grid.getSilo(row, col);
-                if (silo != null) {
-                    silo.toggleExecution(false);
-                }
+                silo.pause();
             }
         }
     }
 
+    //1 instruction from each silo must be executed then execution and then execution is halted
     public synchronized void stepSilos() {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
                 SiloState silo = grid.getSilo(row, col);
                 if (silo != null) {
-                    try {
-                        silo.step();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    silo.step();
                 }
             }
         }
@@ -75,20 +68,8 @@ public class SiloNetwork {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
                 SiloState silo = grid.getSilo(row, col);
-                if (silo != null) {
-                    silo.toggleExecution(false);
-                }
-            }
-        }
-    }
-
-    public synchronized void resetSilos() {
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                SiloState silo = grid.getSilo(row, col);
-                if (silo != null) {
-                    silo.reset();
-                }
+                silo.pause();
+                silo.reset();
             }
         }
     }
@@ -97,7 +78,7 @@ public class SiloNetwork {
         return phaser;
     }
 
-    public int receiveValue(int r, int c, String port) throws InterruptedException {
+    public int receiveValue(int r, int c, String port) {
         for (Stream inputStream : inputStreams) {
             if (isSiloNextToStream(r, c, inputStream.getRow(), inputStream.getCol(), port)) {
                 return inputStream.getNextValue();
@@ -113,7 +94,11 @@ public class SiloNetwork {
             case "RIGHT" -> queue = grid.getQueue(r, c + 1);
             default -> throw new IllegalArgumentException("Invalid port: " + port);
         }
-        value = queue.take();
+        try {
+            value = queue.take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return value;
     }
 

@@ -57,7 +57,7 @@ public class AssemblySilosGUI extends Application {
         Button stopButton = createStopButton();
 
         HBox buttonBox = createButtonBox(startButton, pauseButton, stopButton);
-        HBox streamsBox =populateStreams(gridPane);
+        HBox streamsBox = populateStreams(gridPane);
         VBox sideDisplay = createSideDisplay(streamsBox,buttonBox);
 
         populateGridPaneWithSilos(gridPane);
@@ -92,7 +92,7 @@ public class AssemblySilosGUI extends Application {
                         program = fileData.getSiloInstructions().get(counter);
                     }
                     SiloState silo = network.createSilo(row - 1, col - 1);
-                    silo.setCode(program);
+                    silo.getSiloGraphic().setCodeArea(program);
                     gridPane.add(silo.getSiloGraphic(), col, row);
                     counter++;
                 }
@@ -148,7 +148,6 @@ public class AssemblySilosGUI extends Application {
         styleButton(stopButton);
         stopButton.setOnAction(event -> {
             network.stopSilos();
-            network.resetSilos();
         });
         return stopButton;
     }
@@ -156,6 +155,7 @@ public class AssemblySilosGUI extends Application {
     private Button createPauseButton() {
         Button pauseButton = new Button("Pause");
         styleButton(pauseButton);
+
         pauseButton.setOnAction(event -> {
             if (!isPaused) {
                 network.pauseSilos();

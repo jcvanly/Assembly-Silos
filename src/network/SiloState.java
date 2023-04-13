@@ -4,7 +4,6 @@ import gui.SiloGraphic;
 import commands.Instruction;
 import javafx.application.Platform;
 import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.Phaser;
 
 /**
@@ -17,12 +16,12 @@ public class SiloState {
     private final int row;
     private final int col;
     private final SiloNetwork network;
-    private static Phaser phaser;
+    private final Phaser phaser;
     private final SiloGraphic siloGraphic;
-    private Interpreter interpreter;
-    private final Parser parser;
-    private Thread thread;
-    private boolean threadStarted;
+
+    private final Interpreter interpreter;
+    private final Thread thread;
+    private Parser parser;
 
     /**
      * Creates a new SiloState.
@@ -38,22 +37,13 @@ public class SiloState {
         this.col = col;
         phaser = network.getPhaser();
         this.network = network;
-        threadStarted = false;
 
-        parser = new Parser();
         siloGraphic = new SiloGraphic();
-    }
 
-    public void startSilo() {
-        if (!threadStarted) {
-            thread.start();
-            threadStarted = true;
-        }
-        interpreter.setRunning(true);
-    }
+        interpreter = new Interpreter(this);
+        thread = new Thread(interpreter);
 
-    public Thread getThread() {
-        return thread;
+        thread.start();
     }
 
     public SiloGraphic getSiloGraphic() {
@@ -63,7 +53,7 @@ public class SiloState {
     /**
      * Waits for all silos to reach this point.
      */
-    public static void waitForSynchronization() {
+    public void waitForSynchronization() {
         phaser.arriveAndAwaitAdvance();
     }
 
@@ -71,9 +61,8 @@ public class SiloState {
      * reads from a port
      * @param port The port to read from.
      * @return The value read from the port.
-     * @throws InterruptedException If the thread is interrupted.
      */
-    public int readFromPort(String port) throws InterruptedException {
+    public int readFromPort(String port) {
         Platform.runLater(() -> siloGraphic.setModeVariable("READ"));
         phaser.arriveAndDeregister();
         Platform.runLater(() -> siloGraphic.setTransferLabelVisible(port, true));
@@ -91,6 +80,7 @@ public class SiloState {
      */
     public void writeToPort(String port, int value) throws InterruptedException {
         Platform.runLater(() -> {
+            System.out.println("Writing to port: " + port + " value: " + value);
             siloGraphic.setModeVariable("WRITE");
             siloGraphic.updateTransferValue(value, port);
             siloGraphic.setTransferLabelVisible(port,true); // Make the TransferLabel visible
@@ -99,11 +89,11 @@ public class SiloState {
 
         network.sendValue(row, col, port, value);
 
+        phaser.register();
         Platform.runLater(() -> {
             siloGraphic.setModeVariable("IDLE");
             siloGraphic.setTransferLabelVisible(port,false); // Hide the TransferLabel
         });
-        phaser.register();
     }
 
     /**
@@ -154,8 +144,8 @@ public class SiloState {
     }
 
     public void setAcc(int acc) {
-        this.acc = acc;
         Platform.runLater(() -> siloGraphic.setAccVariable(acc));
+        this.acc = acc;
     }
 
     public int getBak() {
@@ -164,8 +154,8 @@ public class SiloState {
     }
 
     public void setBak(int bak) {
-        this.bak = bak;
         Platform.runLater(() -> siloGraphic.setBakVariable(bak));
+        this.bak = bak;
     }
 
     public int getInstructionIndex() {
@@ -176,45 +166,12 @@ public class SiloState {
         this.instructionIndex = instructionIndex;
     }
 
-    public void setCode(String currentCode) {
-        if (thread != null && thread.isAlive()) {
-            interpreter.setRunning(false);
-        }
-        siloGraphic.setCodeArea(currentCode);
-        List<Instruction> instructions = parser.parse(currentCode);
-        setInstructions(instructions);
-    }
-
-    public void setInstructions(List<Instruction> instructions) {
-        if (thread != null && thread.isAlive()) {
-            interpreter.setInstructions(instructions);
-            interpreter.setRunning(true);
-        } else {
-            interpreter = new Interpreter(this, instructions);
-            interpreter.setRunning(true);
-            thread = new Thread(() -> {
-                try {
-
-                    interpreter.run();
-                } catch (InterruptedException | BrokenBarrierException e) {
-                    System.out.println("Thread interrupted, shutting down");
-                }
-            });
-        }
-    }
-
-    public void updateInstructionsFromGraphic() {
-        String code = siloGraphic.getCodeArea();
-        setCode(code);
-    }
-
-    public void toggleExecution(boolean running) {
-        interpreter.setRunning(running);
-        Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
-    }
-
-    public void step() throws InterruptedException {
+    public void step() {
         interpreter.step();
+    }
+
+    public void pause() {
+        interpreter.setRunning(false);
     }
 
     public void reset() {
@@ -224,11 +181,19 @@ public class SiloState {
         setBak(0);
     }
 
-    public int getAccumulator() {
-        return acc;
-    }
-
     public int getInstructionSize() {
         return interpreter.getInstructionSize();
+    }
+
+    public void startSilo() {
+        String code = siloGraphic.getCodeArea();
+        parser = new Parser();
+        List<Instruction> instructions = parser.parse(code);
+        interpreter.setInstructions(instructions);
+        interpreter.setRunning(true);
+    }
+
+    public void interruptThread() {
+        thread.interrupt();
     }
 }

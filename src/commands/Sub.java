@@ -9,7 +9,7 @@ public class Sub implements Instruction {
     }
 
     @Override
-    public void execute(SiloState siloState) throws InterruptedException {
+    public void execute(SiloState siloState) {
         int value;
         if (siloState.isRegister(src)) {
             value = siloState.getRegisterValue(src);
