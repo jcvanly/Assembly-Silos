@@ -3,14 +3,16 @@ package network;
 import gui.StreamGraphic;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.SynchronousQueue;
 
-public class Stream {
+public class Stream implements Runnable {
     private final int row;
     private final int col;
     private final boolean isInput;
     private final List<Integer> values;
     private int currentIndex;
     private final StreamGraphic streamGraphic;
+    private final SynchronousQueue<Integer> queue;
 
     /***
      * Creates a new stream
@@ -25,6 +27,8 @@ public class Stream {
         this.values = new ArrayList<>();
         this.currentIndex = 0;
         streamGraphic = new StreamGraphic(this);
+        queue = new SynchronousQueue<>();
+        new Thread(this).start();
     }
 
     public void addValue(int value) {
@@ -50,15 +54,11 @@ public class Stream {
 
     public int getNextValue() {
         if (isInput) {
-            //check if the nextvalue is out of bounds
-            if (currentIndex >= values.size()) {
-
-            }
             int value = values.get(currentIndex);
-            currentIndex = (currentIndex + 1) % values.size();
+            currentIndex += 1;
             return value;
         }
-        return 0;
+        return -1;
     }
 
     public void clear() {
@@ -72,5 +72,26 @@ public class Stream {
         if (isInput) {
             currentIndex = 0;
         }
+    }
+
+    public boolean hasNextValue() {
+        return currentIndex < values.size();
+    }
+
+    @Override
+    public void run() {
+        //While the input stream has values, output them to its SynchronousQueue
+        while (hasNextValue()) {
+            int value = getNextValue();
+            try {
+                queue.put(value);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public SynchronousQueue<Integer> getQueue() {
+        return queue;
     }
 }
