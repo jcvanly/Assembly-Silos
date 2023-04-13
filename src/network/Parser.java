@@ -176,6 +176,12 @@ public class Parser {
             }
         }
 
+        // Check if there are enough silos, and if not, fill the remaining ones with "NOOP"
+        int totalSilos = numRows * numCols;
+        while (siloInstructions.size() < totalSilos) {
+            siloInstructions.add("NOOP");
+        }
+
         reader.close();
         return new InputFileData(numRows, numCols, siloInstructions, inputStreams, outputStreams);
     }
