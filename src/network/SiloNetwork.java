@@ -43,6 +43,12 @@ public class SiloNetwork {
         }
     }
 
+    public void startInputStreams() {
+        for (Stream inputStream : inputStreams) {
+            inputStream.start();
+        }
+    }
+
     public synchronized void pauseSilos() {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
@@ -69,14 +75,7 @@ public class SiloNetwork {
                 SiloState silo = grid.getSilo(row, col);
                 silo.pause();
                 silo.reset();
-                //Clear output stream
-                for (Stream outputStream : outputStreams) {
-                    outputStream.clear();
-                }
-                //reset input stream index to 0
-                for (Stream inputStream : inputStreams) {
-                    inputStream.resetIndex();
-                }
+                silo.stopThread();
             }
         }
     }
@@ -86,19 +85,18 @@ public class SiloNetwork {
     }
 
     public int receiveValue(int r, int c, String port) {
+        int value = 0;
+        SynchronousQueue<Integer> queue = grid.getQueue(r, c, port);
         for (Stream inputStream : inputStreams) {
             if (isSiloNextToStream(r, c, inputStream.getRow(), inputStream.getCol(), port)) {
-                return inputStream.getNextValue();
+                //sets queue to the queue of the stream
+                queue = inputStream.getQueue();
             }
         }
-
-        SynchronousQueue<Integer> queue;
-        int value = 0;
-        queue = grid.getQueue(r, c, port);
         try {
             value = queue.take();
         } catch (InterruptedException e) {
-            System.out.println("Interrupted while waiting for value");
+            System.out.println("Interrupted while waiting for value from silo");
         }
         return value;
     }
@@ -147,5 +145,14 @@ public class SiloNetwork {
 
     public List<Stream> getOutputStreams() {
         return outputStreams;
+    }
+
+    public void stopStreams() {
+        for (Stream inputStream : inputStreams) {
+            inputStream.kill();
+        }
+        for (Stream outputStream : outputStreams) {
+            outputStream.kill();
+        }
     }
 }
