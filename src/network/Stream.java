@@ -50,6 +50,10 @@ public class Stream {
 
     public int getNextValue() {
         if (isInput) {
+            //check if the nextvalue is out of bounds
+            if (currentIndex >= values.size()) {
+
+            }
             int value = values.get(currentIndex);
             currentIndex = (currentIndex + 1) % values.size();
             return value;

@@ -9,6 +9,7 @@ public class Interpreter implements Runnable {
     private final SiloState siloState;
     private List<Instruction> instructions;
     private boolean isRunning = false;
+    private boolean isAlive = true;
     private Instruction currentInstruction;
 
 
@@ -18,7 +19,7 @@ public class Interpreter implements Runnable {
 
     public void run() {
         //Thread Behavior
-        while (true) {
+        while (isAlive) {
             if (isRunning) {
                 System.out.println("[RUNNING NEXT INSTRUCTION]");
                 currentInstruction = instructions.get(siloState.getInstructionIndex());
@@ -56,9 +57,11 @@ public class Interpreter implements Runnable {
 
         siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
         if (siloState.getInstructionIndex() >= instructions.size()) {
-                siloState.setInstructionIndex(0);
+            siloState.setInstructionIndex(0);
         }
+        //siloState.waitForSynchronization();
     }
+
 
     public void setRunning(boolean running) {
         isRunning = running;
@@ -70,5 +73,9 @@ public class Interpreter implements Runnable {
 
     public int getInstructionSize() {
         return instructions.size();
+    }
+
+    public void kill() {
+        isAlive = false;
     }
 }

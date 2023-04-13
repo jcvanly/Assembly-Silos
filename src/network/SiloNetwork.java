@@ -29,7 +29,7 @@ public class SiloNetwork {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
                 SiloState siloState = grid.getSilo(r, c);
-                siloState.interruptThread();
+                siloState.stopThread();
             }
         }
     }
@@ -52,13 +52,13 @@ public class SiloNetwork {
         }
     }
 
-    //1 instruction from each silo must be executed then execution and then execution is halted
     public synchronized void stepSilos() {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
                 SiloState silo = grid.getSilo(row, col);
                 if (silo != null) {
                     silo.step();
+                    silo.waitForSynchronization();
                 }
             }
         }
@@ -94,18 +94,12 @@ public class SiloNetwork {
         }
 
         SynchronousQueue<Integer> queue;
-        int value;
-        switch (port) {
-            case "UP" -> queue = grid.getQueue(r, c);
-            case "DOWN" -> queue = grid.getQueue(r + 1, c);
-            case "LEFT" -> queue = grid.getQueue(r, c - 1);
-            case "RIGHT" -> queue = grid.getQueue(r, c + 1);
-            default -> throw new IllegalArgumentException("Invalid port: " + port);
-        }
+        int value = 0;
+        queue = grid.getQueue(r, c, port);
         try {
             value = queue.take();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("Interrupted while waiting for value");
         }
         return value;
     }
@@ -117,7 +111,14 @@ public class SiloNetwork {
                 return;
             }
         }
-        SynchronousQueue<Integer> queue = grid.getQueue(r , c);
+        SynchronousQueue<Integer> queue;
+        switch (port) {
+            case "UP" -> queue = grid.getQueue(r - 1, c, "DOWN");
+            case "DOWN" -> queue = grid.getQueue(r + 1, c, "UP");
+            case "LEFT" -> queue = grid.getQueue(r, c - 1, "RIGHT");
+            case "RIGHT" -> queue = grid.getQueue(r, c + 1, "LEFT");
+            default -> throw new IllegalArgumentException("Invalid port: " + port);
+        }
         queue.put(value);
     }
 

@@ -9,7 +9,7 @@ import java.util.concurrent.Phaser;
 /**
  * Represents the state of a silo
  */
-public class SiloState {
+public class SiloState  {
     private int acc;
     private int bak;
     private int instructionIndex;
@@ -197,7 +197,7 @@ public class SiloState {
         interpreter.setRunning(true);
     }
 
-    public void interruptThread() {
-        thread.interrupt();
+    public void stopThread() {
+        interpreter.kill();
     }
 }
