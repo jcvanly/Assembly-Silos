@@ -22,7 +22,6 @@ public class Interpreter implements Runnable {
         //Thread Behavior
         while (isAlive) {
             if (isRunning) {
-                System.out.println("[RUNNING NEXT INSTRUCTION]");
                 currentInstruction = instructions.get(siloState.getInstructionIndex());
                 currentInstruction.execute(siloState);
                 siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
@@ -33,13 +32,11 @@ public class Interpreter implements Runnable {
 
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    System.out.println("[SILO INTERRUPTED]");
+                } catch (InterruptedException ignored) {
                 }
 
                 siloState.waitForSynchronization();
             } else if (step) {
-                System.out.println("[STEPPING 1 INSTRUCTION]");
                 currentInstruction = instructions.get(siloState.getInstructionIndex());
                 currentInstruction.execute(siloState);
                 siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
@@ -51,11 +48,9 @@ public class Interpreter implements Runnable {
                 siloState.waitForSynchronization();
                 step = false;
             } else {
-                System.out.println("[SILO WAITING]");
                 try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    System.out.println("[SILO INTERRUPTED]");
+                    Thread.sleep(10);
+                } catch (InterruptedException ignored) {
                 }
             }
         }
