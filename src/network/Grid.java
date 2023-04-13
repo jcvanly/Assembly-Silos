@@ -1,27 +1,34 @@
 package network;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 
 public class Grid {
     private final int numRows;
     private final int numCols;
     private final SiloState[][] silos;
-    private final SynchronousQueue<Integer>[][] queues;
+    //Map of string to SynchronousQueue of Integer
+    private final Map<String, SynchronousQueue<Integer>>[][] queues;
 
     public Grid(int numRows, int numCols) {
         this.numRows = numRows;
         this.numCols = numCols;
         this.silos = new SiloState[numRows][numCols];
-        this.queues = new SynchronousQueue[numRows][numCols];
+        this.queues = new Map[numRows][numCols];
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < numCols; c++) {
-                this.queues[r][c] = new SynchronousQueue<>();
+                queues[r][c] = new HashMap<>();
+                queues[r][c].put("UP", new SynchronousQueue<>());
+                queues[r][c].put("DOWN", new SynchronousQueue<>());
+                queues[r][c].put("LEFT", new SynchronousQueue<>());
+                queues[r][c].put("RIGHT", new SynchronousQueue<>());
             }
         }
     }
 
-    public SynchronousQueue<Integer> getQueue(int row, int col) {
-        return queues[row][col];
+    public SynchronousQueue<Integer> getQueue(int row, int col, String direction) {
+        return queues[row][col].get(direction);
     }
 
     public void setSilo(int row, int col, SiloState silo) {

@@ -1,70 +1,68 @@
 package network;
 
 import commands.Instruction;
-import java.util.List;
-import java.util.concurrent.BrokenBarrierException;
 
-/**
- * The interpreter class that runs the instructions.
- */
-public class Interpreter {
+import java.util.List;
+
+
+public class Interpreter implements Runnable {
     private final SiloState siloState;
     private List<Instruction> instructions;
     private boolean isRunning = false;
+    private boolean isAlive = true;
+    private boolean step = false;
+    private Instruction currentInstruction;
 
-    /**
-     * Creates a new interpreter.
-     * @param siloState The silo state.
-     * @param instructions The list of instructions.
-     */
-    public Interpreter(SiloState siloState, List<Instruction> instructions) {
+
+    public Interpreter(SiloState siloState) {
         this.siloState = siloState;
-        this.instructions = instructions;
     }
 
-    /**
-     * Runs the instructions.
-     * @throws InterruptedException If the thread is interrupted.
-     * @throws BrokenBarrierException If the barrier is broken.
-     */
-    public void run() throws InterruptedException, BrokenBarrierException {
-        while (true) {
+    public void run() {
+        //Thread Behavior
+        while (isAlive) {
             if (isRunning) {
-                Instruction currentInstruction = instructions.get(siloState.getInstructionIndex());
+                System.out.println("[RUNNING NEXT INSTRUCTION]");
+                currentInstruction = instructions.get(siloState.getInstructionIndex());
                 currentInstruction.execute(siloState);
                 siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
 
-                // Reset the instruction index to 0 if it reaches the end of the instructions list
                 if (siloState.getInstructionIndex() >= instructions.size()) {
                     siloState.setInstructionIndex(0);
                 }
+
                 try {
-                    // Sleep for 1 second
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    // Restore the interrupted status
-                    Thread.currentThread().interrupt();
-                    break;
+                    System.out.println("[SILO INTERRUPTED]");
                 }
 
-                SiloState.waitForSynchronization();
+                siloState.waitForSynchronization();
+            } else if (step) {
+                System.out.println("[STEPPING 1 INSTRUCTION]");
+                currentInstruction = instructions.get(siloState.getInstructionIndex());
+                currentInstruction.execute(siloState);
+                siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
+
+                if (siloState.getInstructionIndex() >= instructions.size()) {
+                    siloState.setInstructionIndex(0);
+                }
+
+                siloState.waitForSynchronization();
+                step = false;
+            } else {
+                System.out.println("[SILO WAITING]");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    System.out.println("[SILO INTERRUPTED]");
+                }
             }
         }
+
     }
-
-    public void step() throws InterruptedException {
-        if (!isRunning) return;
-
-        Instruction currentInstruction = instructions.get(siloState.getInstructionIndex());
-        currentInstruction.execute(siloState);
-        siloState.setInstructionIndex(siloState.getInstructionIndex() + 1);
-
-        // Reset the instruction index to 0 if it reaches the end of the instructions list
-        if (siloState.getInstructionIndex() >= instructions.size()) {
-            siloState.setInstructionIndex(0);
-        }
-
-        //SiloState.waitForSynchronization();
+    public void setStep(boolean step) {
+        this.step = step;
     }
 
     public void setRunning(boolean running) {
@@ -77,5 +75,9 @@ public class Interpreter {
 
     public int getInstructionSize() {
         return instructions.size();
+    }
+
+    public void kill() {
+        isAlive = false;
     }
 }
