@@ -43,6 +43,12 @@ public class SiloNetwork {
         }
     }
 
+    public void startInputStreams() {
+        for (Stream inputStream : inputStreams) {
+            inputStream.start();
+        }
+    }
+
     public synchronized void pauseSilos() {
         for (int row = 0; row < grid.getNumRows(); row++) {
             for (int col = 0; col < grid.getNumCols(); col++) {
@@ -69,14 +75,7 @@ public class SiloNetwork {
                 SiloState silo = grid.getSilo(row, col);
                 silo.pause();
                 silo.reset();
-                //Clear output stream
-                for (Stream outputStream : outputStreams) {
-                    outputStream.clear();
-                }
-                //reset input stream index to 0
-                for (Stream inputStream : inputStreams) {
-                    inputStream.resetIndex();
-                }
+                silo.stopThread();
             }
         }
     }
@@ -146,5 +145,14 @@ public class SiloNetwork {
 
     public List<Stream> getOutputStreams() {
         return outputStreams;
+    }
+
+    public void stopStreams() {
+        for (Stream inputStream : inputStreams) {
+            inputStream.kill();
+        }
+        for (Stream outputStream : outputStreams) {
+            outputStream.kill();
+        }
     }
 }

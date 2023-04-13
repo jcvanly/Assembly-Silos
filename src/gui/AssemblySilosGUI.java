@@ -23,6 +23,7 @@ public class AssemblySilosGUI extends Application {
     private int ROWS;
     private int COLS;
     private boolean isPaused = false;
+    private File inputFile;
     private Parser.InputFileData fileData;
     private HBox root;
     private HBox buttonBox;
@@ -36,19 +37,9 @@ public class AssemblySilosGUI extends Application {
         Parser inputParser = new Parser();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Input File");
-        File inputFile = fileChooser.showOpenDialog(primaryStage);
-        if (inputFile != null) {
-            try {
-                fileData = inputParser.parseInputFile(inputFile.getPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            ROWS = fileData.getNumRows();
-            COLS = fileData.getNumCols();
-            network = new SiloNetwork(ROWS, COLS, fileData.getInputStreams(), fileData.getOutputStreams());
-        } else {
-            System.exit(0);
-        }
+        inputFile = fileChooser.showOpenDialog(primaryStage);
+
+        parseInputFile();
 
         root = new HBox();
         root.setStyle("-fx-background-color: black;");
@@ -76,6 +67,22 @@ public class AssemblySilosGUI extends Application {
             Platform.exit();
             System.exit(0);
         });
+    }
+
+    private void parseInputFile() {
+        Parser inputParser = new Parser();
+        if (inputFile != null) {
+            try {
+                fileData = inputParser.parseInputFile(inputFile.getPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            ROWS = fileData.getNumRows();
+            COLS = fileData.getNumCols();
+            network = new SiloNetwork(ROWS, COLS, fileData.getInputStreams(), fileData.getOutputStreams());
+        } else {
+            System.exit(0);
+        }
     }
 
     private void populateGridPaneWithSilos(GridPane gridPane) {
@@ -175,6 +182,7 @@ public class AssemblySilosGUI extends Application {
         styleButton(startButton);
         startButton.setOnAction(e -> {
             network.startSilos();
+            network.startInputStreams();
             pauseButton.setText("Pause");
             isPaused = false;
         });
@@ -192,11 +200,12 @@ public class AssemblySilosGUI extends Application {
         return gridPane;
     }
 
-    // Reconstruct entire display from the stored filedata
     public void reset() {
         network.stopSilos();
-        network.stopThreads();
-        network = new SiloNetwork(ROWS, COLS, fileData.getInputStreams(), fileData.getOutputStreams());
+        network.stopStreams();
+
+        parseInputFile();
+
         GridPane gridPane = createGridPane();
         HBox streamsBox = populateStreams(gridPane);
         VBox sideDisplay = createSideDisplay(streamsBox, buttonBox);

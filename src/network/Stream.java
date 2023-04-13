@@ -1,6 +1,8 @@
 package network;
 
 import gui.StreamGraphic;
+import javafx.application.Platform;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
@@ -12,7 +14,10 @@ public class Stream implements Runnable {
     private final List<Integer> values;
     private int currentIndex;
     private final StreamGraphic streamGraphic;
-    private final SynchronousQueue<Integer> queue;
+    private SynchronousQueue<Integer> queue;
+    private boolean isRunning;
+    private boolean isAlive = true;
+    private Thread thread;
 
     /***
      * Creates a new stream
@@ -28,12 +33,49 @@ public class Stream implements Runnable {
         this.currentIndex = 0;
         streamGraphic = new StreamGraphic(this);
         queue = new SynchronousQueue<>();
-        new Thread(this).start();
+        isRunning = false;
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    @Override
+    public void run() {
+        //While the input stream has values, output them to its SynchronousQueue
+        while (isAlive) {
+            if (isInput && isRunning) {
+                if (currentIndex < values.size()) {
+                    try {
+                        queue.put(values.get(currentIndex));
+                        currentIndex++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void start() {
+        isRunning = true;
+    }
+
+    public void stop() {
+        isRunning = false;
     }
 
     public void addValue(int value) {
         values.add(value);
-        streamGraphic.updateGraphic();
+        Platform.runLater(streamGraphic::updateGraphic);
+    }
+
+    public void kill() {
+        isAlive = false;
     }
 
     public StreamGraphic getStreamGraphic() {
@@ -50,45 +92,6 @@ public class Stream implements Runnable {
 
     public int getCol() {
         return col;
-    }
-
-    public int getNextValue() {
-        if (isInput) {
-            int value = values.get(currentIndex);
-            currentIndex += 1;
-            return value;
-        }
-        return -1;
-    }
-
-    public void clear() {
-        if (!isInput) {
-            values.clear();
-            streamGraphic.updateGraphic();
-        }
-    }
-
-    public void resetIndex() {
-        if (isInput) {
-            currentIndex = 0;
-        }
-    }
-
-    public boolean hasNextValue() {
-        return currentIndex < values.size();
-    }
-
-    @Override
-    public void run() {
-        //While the input stream has values, output them to its SynchronousQueue
-        while (hasNextValue()) {
-            int value = getNextValue();
-            try {
-                queue.put(value);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public SynchronousQueue<Integer> getQueue() {
