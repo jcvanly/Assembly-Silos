@@ -178,7 +178,7 @@ public class AssemblySilosGUI extends Application {
         });
         return startButton;
     }
-
+    .
     private void styleButton(Button button) {
         button.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         button.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
