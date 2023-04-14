@@ -189,10 +189,16 @@ public class SiloState  {
 
     public void startSilo() {
         String code = siloGraphic.getCodeArea();
-        Parser parser = new Parser();
-        List<Instruction> instructions = parser.parse(code);
-        interpreter.setInstructions(instructions);
-        interpreter.setRunning(true);
+        //if code is empty deregister the phaser
+        if (code.isEmpty()) {
+            interpreter.kill();
+            phaser.arriveAndDeregister();
+        } else {
+            Parser parser = new Parser();
+            List<Instruction> instructions = parser.parse(code);
+            interpreter.setInstructions(instructions);
+            interpreter.setRunning(true);
+        }
     }
 
     public void stopThread() {

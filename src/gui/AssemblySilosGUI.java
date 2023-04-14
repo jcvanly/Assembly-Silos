@@ -34,7 +34,6 @@ public class AssemblySilosGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Parser inputParser = new Parser();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose Input File");
         inputFile = fileChooser.showOpenDialog(primaryStage);
