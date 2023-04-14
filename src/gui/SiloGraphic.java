@@ -12,20 +12,35 @@ import javafx.scene.text.Font;
 
 import java.util.concurrent.Callable;
 
-
 /**
- * A visual representation of a Silo
+ * This class creates a visual representation of a Silo. Each silo has
+ * four variables, ACC, BAK, LAST, and MODE. These variables are shown
+ * stacked in a grid on the left side of the silo. The right side of
+ * the silo features a text box where the silos instructions are shown.
+ * The user is able to delete or add new instructions in this text box.
+ * Each silo also features transfer value labels. When a silo sends a
+ * number to another silo, these labels (represented by <, >, ^, v)
+ * will be shown graphically.
  */
 public class SiloGraphic extends GridPane {
+
     private final Pane mainSiloPane;
+    //A Pane component that holds the main visual components of the silo, such as the rectangles and labels.
     private Rectangle outerRectangle;
+    // A Rectangle component representing the outer boundary of the silo.
     private Rectangle[] innerSquares;
+    // An array of Rectangle components representing the inner squares of the silo, where each square is
+    // associated with a specific variable.
     private Label[] variableLabels;
+    // An array of Label components displaying the values of the associated variables (ACC, BAK, LAST, and MODE).
     private TextArea codeArea;
+    // A TextArea component for displaying and editing the code associated with the silo.
     private Label upLabel;
     private Label downLabel;
     private Label leftLabel;
     private Label rightLabel;
+    // components representing the transfer values in each direction (UP, DOWN, LEFT, and RIGHT).
+
 
     /**
      * Creates a Silo object
@@ -39,6 +54,9 @@ public class SiloGraphic extends GridPane {
         add(mainSiloPane, 1, 1);
     }
 
+    /**
+     * Creates the transfer value labels for each direction in the silo
+     */
     private void createTransferValueLabels() {
         upLabel = new Label("^ \n    ");
         downLabel = new Label("    \n v");
@@ -77,7 +95,9 @@ public class SiloGraphic extends GridPane {
 
     }
 
-
+    /**
+     *  Updates the transfer value label in the specified direction with the given value
+     */
     public void updateTransferValue(int value, String direction) {
         switch (direction) {
             case "UP" -> {
@@ -133,6 +153,9 @@ public class SiloGraphic extends GridPane {
         codeArea.setText(code);
     }
 
+    /**
+     * Returns the text of the code area.
+     */
     public String getCodeArea() {
         return codeArea.getText();
     }
@@ -239,6 +262,9 @@ public class SiloGraphic extends GridPane {
         }
     }
 
+    /**
+     * Sets the visibility of the transfer label in the specified direction.
+    */
     public void setTransferLabelVisible(String direction, boolean b) {
         switch (direction) {
             case "UP" -> upLabel.setVisible(b);
