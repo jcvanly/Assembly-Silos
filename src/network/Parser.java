@@ -72,6 +72,10 @@ public class Parser {
                     Instruction instruction = factory.create(substituteLabels(tokens, labels));
                     instructions.add(instruction);
                 } else {
+                    //if the command is empty, do nothing
+                    if (command.equals("")) {
+                        continue;
+                    }
                     throw new IllegalArgumentException("Unknown command: " + command);
                 }
                 instructionIndex++;
