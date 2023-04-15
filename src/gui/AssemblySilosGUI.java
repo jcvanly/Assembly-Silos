@@ -17,6 +17,16 @@ import network.Stream;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This Java code is an implementation of a graphical user interface (GUI) for an
+ * assembly silo simulation. The application extends the JavaFX Application class
+ * and makes use of JavaFX components such as Stage, Scene, GridPane, HBox, VBox,
+ * and Button to create the layout and controls. The simulation is based on a
+ * SiloNetwork class that represents a network of silos and input/output streams.
+ * The simulation can be started, paused, stepped through, and stopped using the
+ * buttons provided in the GUI.
+ */
+
 public class AssemblySilosGUI extends Application {
 
     private static SiloNetwork network;
@@ -28,10 +38,19 @@ public class AssemblySilosGUI extends Application {
     private HBox root;
     private HBox buttonBox;
 
+    /**
+     * main launches the javaFX
+     */
+
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * The start method sets up the primary stage and initializes the layout,
+     * including creating and populating the GridPane with silos, input and
+     * output streams, and control buttons.
+     */
     @Override
     public void start(Stage primaryStage) {
         FileChooser fileChooser = new FileChooser();
@@ -68,6 +87,12 @@ public class AssemblySilosGUI extends Application {
         });
     }
 
+    /**
+     * The parseInputFile method reads input data from a file, creates a new
+     * SiloNetwork instance, and sets the number of rows and columns based
+     * on the input file.
+     */
+
     private void parseInputFile() {
         Parser inputParser = new Parser();
         if (inputFile != null) {
@@ -83,6 +108,10 @@ public class AssemblySilosGUI extends Application {
             System.exit(0);
         }
     }
+
+    /**
+     * The populateGridPaneWithSilos method adds the silos to the GridPane.
+     */
 
     private void populateGridPaneWithSilos(GridPane gridPane) {
         int gridRows = ROWS + 2;
@@ -107,6 +136,11 @@ public class AssemblySilosGUI extends Application {
             }
         }
     }
+
+    /**
+     * The populateStreams method adds input and output streams
+     * to an HBox, which is used to display their graphics.
+     */
 
     private HBox populateStreams(GridPane gridPane) {
         HBox streamsBox = new HBox();
@@ -134,6 +168,12 @@ public class AssemblySilosGUI extends Application {
         return streamsBox;
     }
 
+    /**
+     * The createSideDisplay, createButtonBox, and createStopButton, createPauseButton,
+     * and createStartButton methods create and style the buttons for controlling the
+     * simulation.
+     */
+
     private VBox createSideDisplay(HBox streamsBox, HBox buttonBox) {
         VBox sideDisplay = new VBox();
 
@@ -142,6 +182,7 @@ public class AssemblySilosGUI extends Application {
         sideDisplay.setAlignment(Pos.CENTER);
         return sideDisplay;
     }
+
 
     private HBox createButtonBox(Button startButton, Button pauseButton, Button stopButton) {
         HBox buttonBox = new HBox();
@@ -188,16 +229,29 @@ public class AssemblySilosGUI extends Application {
         return startButton;
     }
 
+    /**
+     * The styleButton method applies a consistent style to the buttons.
+     */
+
     private void styleButton(Button button) {
         button.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         button.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
     }
+
+    /**
+     * The createGridPane method initializes the GridPane with a black background color.
+     */
 
     private GridPane createGridPane() {
         GridPane gridPane = new GridPane();
         gridPane.setStyle("-fx-background-color: black;");
         return gridPane;
     }
+
+    /**
+     * The reset method stops the simulation and resets the layout, allowing
+     * the user to restart the simulation with the same input file.
+     */
 
     public void reset() {
         network.stopSilos();
