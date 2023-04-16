@@ -5,6 +5,8 @@ import java.io.*;
 import java.util.*;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * Parses an input file containing a string into a list of instruction objects,
  * grid dimensions, silo instructions, input streams, and output streams.
  */

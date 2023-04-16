@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * The Grid class in this Java code represents a grid of silos
  * in the SiloNetwork. It has a 2D array of SiloState objects
  * representing the silos and a 2D array of maps that contain

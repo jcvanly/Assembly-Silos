@@ -1,6 +1,8 @@
 package commands;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * The Instruction interface defines a contract for implementing various instructions
  * that can be executed by a silo. It makes use of the SiloState class, which is a part
  * of the 'network' package, to represent the current state of a silo during the execution

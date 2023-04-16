@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * The Stream class represents a stream in the SiloNetwork. The stream
  * can be an input stream (providing values to a silo) or an output stream
  * (receiving values from a silo). It provides methods for controlling the

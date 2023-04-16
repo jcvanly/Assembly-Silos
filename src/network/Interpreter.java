@@ -5,6 +5,8 @@ import commands.Instruction;
 import java.util.List;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * This class represents an interpreter for the SiloState objects.
  * It is responsible for executing instructions associated with a
  * specific SiloState. The class implements the Runnable interface,
