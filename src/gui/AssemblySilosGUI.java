@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * This Java code is an implementation of a graphical user interface (GUI) for an
  * assembly silo simulation. The application extends the JavaFX Application class
  * and makes use of JavaFX components such as Stage, Scene, GridPane, HBox, VBox,

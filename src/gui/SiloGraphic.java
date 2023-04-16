@@ -13,6 +13,8 @@ import javafx.scene.text.Font;
 import java.util.concurrent.Callable;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * This class creates a visual representation of a Silo. Each silo has
  * four variables, ACC, BAK, LAST, and MODE. These variables are shown
  * stacked in a grid on the left side of the silo. The right side of

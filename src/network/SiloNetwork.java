@@ -5,6 +5,8 @@ import java.util.concurrent.Phaser;
 import java.util.concurrent.SynchronousQueue;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * This code implements SiloNetwork which represents a network of silos and
  * input/output streams for the assembly silo simulation. The network consists
  * of a grid of SiloState objects, a list of input streams, a list of output

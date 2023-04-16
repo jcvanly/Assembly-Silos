@@ -8,6 +8,8 @@ import javafx.scene.text.Font;
 import network.Stream;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * This class is used to create a visual representation of a Stream object.
  * The streams are used to show silos either receiving input or sending output
  * to other silos. The stream is just a number, accompanied by an arrow graphic

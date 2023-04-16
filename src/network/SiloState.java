@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.concurrent.Phaser;
 
 /**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
  * This Java code is an implementation of a SiloState class that represents
  * the state of an individual silo in the SiloNetwork. The state includes
  * various attributes like accumulator (acc), backup (bak), instructionIndex,
