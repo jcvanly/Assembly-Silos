@@ -36,11 +36,6 @@ The GUI is written in JavaFX and allows users to:
 - View the current value of each input stream and all previous values written to an output stream
 
 
-## Bugs
-
-- Values being transferred shown on the GUI: 
-  - Since the javafx is updated after the transfer is done, the value being transferred is not shown on the GUI. However, the value is transferred correctly and is displayed after the transfer is done.
-
 ## Getting Started
 
 To run the Assembly Silos project, follow these steps:
@@ -48,6 +43,48 @@ To run the Assembly Silos project, follow these steps:
 1. Download the executable jar file `assembly-silos.jar`
 2. Run the program with the console command `java -jar assembly-silos.jar [input].txt`
 3. Use the provided controls to start, pause, step, and stop the execution of silo programs.
+
+### Input file format:
+
+```html
+[numRows] [numCols] 
+[instruction]
+[instruction] 
+. . .
+END
+[instruction]
+[instruction]
+. . .
+END
+. . . 
+END 
+INPUT
+-1 1 
+10
+11 
+12 
+13 
+END 
+OUTPUT
+1 1 
+END
+```
+- The first line tells you how many rows and columns the grid is going to have. The subsequent lines after that are the instructions which must be loaded into the first silo. 
+- Note the silos will be given row by row. Then when you see END that means the instructions for that silo are done. 
+- You then move onto the next silo and so on and so forth. Next you must read in the input/output streams.
+  An input stream will follow the keyword INPUT and will then be followed the
+  coordinates of the stream. Note these coordinates will have 1 out of bound
+  coordinate. This is to signify that is not by of the normal silo grid but rather
+  adjacent to it. 
+- The values of the stream are given after these
+  coordinates. An output stream will follow the keyword OUTPUT and only
+  coordinates will be given. Both stream will end with END
+
+## Bugs
+
+- Values being transferred shown on the GUI:
+    - Since the javafx is updated after the transfer is done, the value being transferred is not shown on the GUI. However, the value is transferred correctly and is displayed after the transfer is done.
+
 
 
 
