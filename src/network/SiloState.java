@@ -110,7 +110,7 @@ public class SiloState  {
      * @return True if the key is a register, false otherwise.
      */
     public boolean isRegister(String key) {
-        return key.equalsIgnoreCase("ACC") || key.equalsIgnoreCase("BAK");
+        return key.equalsIgnoreCase("ACC") || key.equalsIgnoreCase("NIL") || key.equalsIgnoreCase("BAK");
     }
 
     /**
@@ -129,10 +129,16 @@ public class SiloState  {
      * @return
      */
     public int getRegisterValue(String key) {
-        if (key.equals("ACC")) {
-            return acc;
-        } else if (key.equals("BAK")) {
-            return bak;
+        switch (key) {
+            case "ACC" -> {
+                return acc;
+            }
+            case "BAK" -> {
+                return bak;
+            }
+            case "NIL" -> {
+                return 0;
+            }
         }
         throw new IllegalArgumentException("Invalid register: " + key);
     }
@@ -143,6 +149,8 @@ public class SiloState  {
             setAcc(value);
         } else if (key.equalsIgnoreCase("BAK")) {
             setBak(value);
+        } else if (key.equalsIgnoreCase("NIL")) {
+            // Do nothing
         } else {
             throw new IllegalArgumentException("Invalid register: " + key);
         }

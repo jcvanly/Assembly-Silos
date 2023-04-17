@@ -22,6 +22,8 @@ public class StreamGraphic extends VBox {
     // A Label component used for displaying the stream's title.
     private final Label streamHeaderLabel;
     // A Label component used as a header for the streamTextArea.
+    private final Label currentValueLabel;
+    // Add a Label component to display the current value
     private final TextArea streamTextArea;
     // A TextArea component that displays the values of the stream.
     private final Stream stream;
@@ -44,11 +46,15 @@ public class StreamGraphic extends VBox {
         streamLabel.setStyle("-fx-text-fill: white;");
         streamLabel.setAlignment(Pos.CENTER);
         streamHeaderLabel.setStyle("-fx-text-fill: white;");
+        currentValueLabel = new Label("");
+        currentValueLabel.setStyle("-fx-text-fill: white;");
+
+        currentValueLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         streamTextArea.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         streamLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
         streamHeaderLabel.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
 
-        getChildren().addAll(streamHeaderLabel, streamTextArea);
+        getChildren().addAll(streamHeaderLabel, currentValueLabel, streamTextArea);
     }
 
     /**
@@ -75,5 +81,14 @@ public class StreamGraphic extends VBox {
             streamText.append(stream.getValues().get(i)).append("\n");
         }
         streamTextArea.setText(streamText.toString());
+
+        //if stream is an input stream
+        if (stream.isInput()) {
+            if (!stream.getValues().isEmpty()) {
+                currentValueLabel.setText("VAL: " + stream.getCurrentValue());
+            } else {
+                currentValueLabel.setText("VAL: N/A");
+            }
+        }
     }
 }

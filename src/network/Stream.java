@@ -67,6 +67,8 @@ public class Stream implements Runnable {
                     try {
                         queue.put(values.get(currentIndex));
                         currentIndex++;
+                        //update stream graphic
+                        Platform.runLater(streamGraphic::updateGraphic);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -90,8 +92,8 @@ public class Stream implements Runnable {
         isRunning = true;
     }
 
-    public void stop() {
-        isRunning = false;
+    public boolean isInput() {
+        return isInput;
     }
 
     /**
@@ -132,6 +134,15 @@ public class Stream implements Runnable {
     }
 
     public SynchronousQueue<Integer> getQueue() {
+        Platform.runLater(streamGraphic::updateGraphic);
         return queue;
+    }
+
+    public String getCurrentValue() {
+        if (currentIndex < values.size()) {
+            return String.valueOf(values.get(currentIndex));
+        } else {
+            return "";
+        }
     }
 }

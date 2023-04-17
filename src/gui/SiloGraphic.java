@@ -181,8 +181,8 @@ public class SiloGraphic extends GridPane {
         innerSquares = new Rectangle[4];
         Label[] innerSquareLabels = new Label[4];
         variableLabels = new Label[4];
-        String[] labelTexts = {"ACC", "BAK", "LAST", "MODE"};
-        String[] defaultVariableTexts = {"0", "<0>", "N/A", "IDLE"};
+        String[] labelTexts = {"ACC", "BAK", "NIL", "MODE"};
+        String[] defaultVariableTexts = {"0", "<0>", "[0]", "IDLE"};
 
         for (int i = 0; i < innerSquares.length; i++) {
             innerSquares[i] = new Rectangle();
