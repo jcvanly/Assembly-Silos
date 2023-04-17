@@ -16,6 +16,7 @@ import network.SiloState;
 import network.Stream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import javafx.scene.image.Image;
@@ -59,9 +60,16 @@ public class AssemblySilosGUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choose Input File");
-        inputFile = fileChooser.showOpenDialog(primaryStage);
+        Parameters params = getParameters();
+        List<String> args = params.getRaw();
+
+        if (args.isEmpty()) {
+            Platform.exit();
+            return;
+        }
+
+        String inputFilePath = args.get(0);
+        inputFile = new File(inputFilePath);
 
         parseInputFile();
 
