@@ -2,8 +2,13 @@ package commands;
 import network.SiloState;
 
 /**
- * Moves a value from one register or port to another.
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Syntax: MOVE [SRC] [DST]
+ * 
+ * Read [SRC] and write the result to [DST]
  */
+ 
 public class Move implements Instruction {
     private final String src;
     private final String dest;
