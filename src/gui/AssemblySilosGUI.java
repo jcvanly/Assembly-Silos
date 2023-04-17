@@ -4,10 +4,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import network.Parser;
 import network.SiloNetwork;
@@ -97,10 +99,15 @@ public class AssemblySilosGUI extends Application {
 
         root.getChildren().addAll(sideDisplay, gridPane);
 
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        root.prefWidthProperty().bind(primaryStage.widthProperty());
+        root.prefHeightProperty().bind(primaryStage.heightProperty());
 
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setWidth(screenSize.getWidth());
+        primaryStage.setHeight(screenSize.getHeight());
         primaryStage.setTitle("Assembly Silos");
         Image windowIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon.png")));
         primaryStage.getIcons().add(windowIcon);
