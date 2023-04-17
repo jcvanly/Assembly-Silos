@@ -16,6 +16,10 @@ import network.SiloState;
 import network.Stream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
+
+import javafx.scene.image.Image;
+
 
 /**
  * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
@@ -65,9 +69,18 @@ public class AssemblySilosGUI extends Application {
         root.setStyle("-fx-background-color: black;");
         GridPane gridPane = createGridPane();
 
-        Button pauseButton = createPauseButton();
-        Button startButton = createStartButton(pauseButton);
-        Button stopButton = createStopButton();
+        Button startButton = new Button("Start");
+        styleButton(startButton);
+
+        Button pauseButton = new Button("Pause");
+        styleButton(pauseButton);
+
+        Button stopButton = new Button("Stop");
+        styleButton(stopButton);
+
+        configureStartButton(startButton, pauseButton);
+        configurePauseButton(pauseButton);
+        configureStopButton(stopButton);
 
         buttonBox = createButtonBox(startButton, pauseButton, stopButton);
         HBox streamsBox = populateStreams(gridPane);
@@ -77,9 +90,13 @@ public class AssemblySilosGUI extends Application {
 
         root.getChildren().addAll(sideDisplay, gridPane);
 
+
+
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Assembly Silo Program");
+        primaryStage.setTitle("Assembly Silos");
+        Image windowIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icon.png")));
+        primaryStage.getIcons().add(windowIcon);
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(event -> {
@@ -194,19 +211,16 @@ public class AssemblySilosGUI extends Application {
         return buttonBox;
     }
 
-    private Button createStopButton() {
-        Button stopButton = new Button("Stop");
-        styleButton(stopButton);
-        stopButton.setOnAction(event -> {
-            reset();
+    private void configureStartButton(Button startButton, Button pauseButton) {
+        startButton.setOnAction(e -> {
+            network.startSilos();
+            network.startInputStreams();
+            pauseButton.setText("Pause");
+            isPaused = false;
         });
-        return stopButton;
     }
 
-    private Button createPauseButton() {
-        Button pauseButton = new Button("Pause");
-        styleButton(pauseButton);
-
+    private void configurePauseButton(Button pauseButton) {
         pauseButton.setOnAction(event -> {
             if (!isPaused) {
                 network.pauseSilos();
@@ -216,19 +230,12 @@ public class AssemblySilosGUI extends Application {
                 network.stepSilos();
             }
         });
-        return pauseButton;
     }
 
-    private Button createStartButton(Button pauseButton) {
-        Button startButton = new Button("Start");
-        styleButton(startButton);
-        startButton.setOnAction(e -> {
-            network.startSilos();
-            network.startInputStreams();
-            pauseButton.setText("Pause");
-            isPaused = false;
+    private void configureStopButton(Button stopButton) {
+        stopButton.setOnAction(event -> {
+            reset();
         });
-        return startButton;
     }
 
     /**
@@ -237,8 +244,17 @@ public class AssemblySilosGUI extends Application {
 
     private void styleButton(Button button) {
         button.setFont(Font.loadFont(getClass().getResourceAsStream("/fonts/Silo_Font.TTF"), 16));
-        button.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
+        button.setStyle("-fx-background-color: black; -fx-text-fill: white; ;-fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;");
+
+        // Add hover effect
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #505050; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: black; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;"));
+
+        // Add click effect
+        button.setOnMousePressed(e -> button.setStyle("-fx-background-color: #303030; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;"));
+        button.setOnMouseReleased(e -> button.setStyle("-fx-background-color: #505050; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 2px; -fx-min-width: 50; -fx-min-height: 50;"));
     }
+
 
     /**
      * The createGridPane method initializes the GridPane with a black background color.
