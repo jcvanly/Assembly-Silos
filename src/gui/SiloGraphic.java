@@ -166,7 +166,7 @@ public class SiloGraphic extends GridPane {
      * Creates the main rectangle of the Silo
      */
     private void createOuterRectangle() {
-        outerRectangle = new Rectangle(200,200);
+        outerRectangle = new Rectangle(125,125);
         outerRectangle.setFill(Color.BLACK);
         outerRectangle.setStroke(Color.WHITE);
         outerRectangle.setStrokeWidth(5);
