@@ -49,7 +49,7 @@ To run the Assembly Silos project, follow these steps:
 2. Open the project in your preferred Java IDE (e.g., IntelliJ IDEA).
 3. Make sure JavaFX is properly set up in your IDE.
 4. Run the `AssemblySilosGUI.java` file to start the application.
-5. Input a program via a .txt file through the file chooser.
+5. Input the initial program set-up via a .txt file through the file chooser.
 6. Use the provided controls to start, pause, step, and stop the execution of silo programs.
 
 
