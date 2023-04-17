@@ -1,5 +1,13 @@
 package commands;
 
+/**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Syntax: ADD [SRC]
+ * 
+ * The value of [SRC] is added to the value in the ACC register
+ */
+ 
 import network.SiloState;
 
 public class Add implements Instruction {

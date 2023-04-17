@@ -1,5 +1,14 @@
 package commands;
 
+/**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Syntax: JNZ [LABEL]
+ *
+ * Jumps control of the program to the instruction following the given
+ * [LABEL] if the value in the register ACC is not equal to zero
+ */
+ 
 import network.SiloState;
 
 public class Jnz implements Instruction {

@@ -1,5 +1,14 @@
 package commands;
 
+/**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Syntax: JUMP [LABEL]
+ *
+ * Jumps control of the program to the instruction following the given
+ * [LABEL]
+ */
+
 import network.SiloState;
 
 public class Jump implements Instruction {

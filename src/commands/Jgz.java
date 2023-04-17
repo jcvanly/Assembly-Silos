@@ -1,5 +1,14 @@
 package commands;
 
+/**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Syntax: JGZ [LABEL]
+ * 
+ * Jumps control of the program to the instruction following the given
+ * [LABEL] if the value in the register ACC is greater than zero
+ */
+ 
 import network.SiloState;
 
 public class Jgz implements Instruction {

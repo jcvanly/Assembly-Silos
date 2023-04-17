@@ -1,5 +1,4 @@
 package commands;
-import network.SiloState;
 
 /**
  * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
@@ -9,6 +8,8 @@ import network.SiloState;
  * Read [SRC] and write the result to [DST]
  */
  
+ import network.SiloState;
+
 public class Move implements Instruction {
     private final String src;
     private final String dest;

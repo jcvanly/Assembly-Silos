@@ -1,5 +1,19 @@
 package commands;
 
+/**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Syntax: JRO [SRC]
+ *
+ * Jumps control of the program to the instruction specified by the offset
+ * which is the value contained within [SRC].
+ *
+ * If the offset is greater than the size of the program then you should
+ * wrap around to the beginning of the program until you get to an offset
+ * which is contained within the program. The same goes for negative
+ * offsets
+ */
+ 
 import network.SiloState;
 
 public class Jro implements Instruction {

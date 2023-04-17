@@ -1,5 +1,14 @@
 package commands;
 
+/**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Syntax: :[LABEL]:
+ *
+ * Labels are used to mark a line of code to jump to. When jumped to
+ * the instruction following the label is executed.
+ */
+ 
 import network.SiloState;
 
 public class Label implements Instruction {
