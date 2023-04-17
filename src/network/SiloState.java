@@ -7,7 +7,14 @@ import java.util.List;
 import java.util.concurrent.Phaser;
 
 /**
- * Represents the state of a silo
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * This Java code is an implementation of a SiloState class that represents
+ * the state of an individual silo in the SiloNetwork. The state includes
+ * various attributes like accumulator (acc), backup (bak), instructionIndex,
+ * row, column, and a reference to the SiloNetwork it belongs to. A Phaser is
+ * used for synchronizing the operation of silos. The class also has a
+ * SiloGraphic for handling the graphical representation of the silo.
  */
 public class SiloState  {
     private int acc;
@@ -23,7 +30,8 @@ public class SiloState  {
     private final Thread thread;
 
     /**
-     * Creates a new SiloState.
+     * The constructor creates a silo by initializing the
+     * attributes and starting the interpreter thread.
      * @param network The network that this silo is a part of.
      * @param row The row of the silo.
      * @param col The column of the silo.
@@ -45,19 +53,22 @@ public class SiloState  {
         thread.start();
     }
 
+    /**
+     * Returns the SiloGraphic object associated with the SiloState.
+     */
     public SiloGraphic getSiloGraphic() {
         return siloGraphic;
     }
 
     /**
-     * Waits for all silos to reach this point.
+     * Waits for all silos to reach a synchronization point.
      */
     public void waitForSynchronization() {
         phaser.arriveAndAwaitAdvance();
     }
 
     /**
-     * reads from a port
+     * reads from a specified port
      * @param port The port to read from.
      * @return The value read from the port.
      */
@@ -71,7 +82,7 @@ public class SiloState  {
     }
 
     /**
-     * writes to a port
+     * writes to a specified port
      * @param port The port to write to.
      * @param value The value to write.
      * @throws InterruptedException If the thread is interrupted.
@@ -94,7 +105,7 @@ public class SiloState  {
     }
 
     /**
-     * Checks if the key is a register
+     *  Method checks if a given key is a valid register (ACC or BAK).
      * @param key The key to check.
      * @return True if the key is a register, false otherwise.
      */
@@ -103,7 +114,7 @@ public class SiloState  {
     }
 
     /**
-     * Checks if the key is a port
+     * The isPort method checks if a given key is a valid port (UP, DOWN, LEFT, or RIGHT).
      * @param key The key to check.
      * @return True if the key is a port, false otherwise.
      */
@@ -111,6 +122,12 @@ public class SiloState  {
         return key.equals("UP") || key.equals("DOWN") || key.equals("LEFT") || key.equals("RIGHT");
     }
 
+    /**
+     * The getRegisterValue and setRegisterValue methods are used to access
+     * and modify the values of the ACC and BAK registers.
+     * @param key
+     * @return
+     */
     public int getRegisterValue(String key) {
         switch (key) {
             case "ACC" -> {
@@ -139,10 +156,17 @@ public class SiloState  {
         }
     }
 
+    /**
+     * The noopMethod is a no-operation method, setting the SiloGraphic mode to "IDLE".
+     */
     public void noopMethod() {
         Platform.runLater(() -> siloGraphic.setModeVariable("IDLE"));
     }
 
+    /**
+     * The getAcc, setAcc, getBak, and setBak methods are used to get and set the values
+     * of the accumulator and backup registers, respectively.
+     */
     public int getAcc() {
         Platform.runLater(() -> siloGraphic.setAccVariable(acc));
         return acc;
@@ -163,6 +187,10 @@ public class SiloState  {
         this.bak = bak;
     }
 
+    /**
+     * The getInstructionIndex and setInstructionIndex methods are used to
+     * access and modify the instruction index.
+     */
     public int getInstructionIndex() {
         return instructionIndex;
     }
@@ -171,6 +199,11 @@ public class SiloState  {
         this.instructionIndex = instructionIndex;
     }
 
+    /**
+     * The step, pause, reset, getInstructionSize, startSilo, and
+     * stopThread methods control the behavior of the silo and
+     * its interpreter.
+     */
     public void step() {
         interpreter.setStep(true);
     }

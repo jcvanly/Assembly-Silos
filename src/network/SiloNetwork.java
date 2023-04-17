@@ -4,6 +4,15 @@ import java.util.List;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.SynchronousQueue;
 
+/**
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * This code implements SiloNetwork which represents a network of silos and
+ * input/output streams for the assembly silo simulation. The network consists
+ * of a grid of SiloState objects, a list of input streams, a list of output
+ * streams, and a Phaser to help synchronize the operation of silos. It provides
+ * methods to start, pause, step, and stop the simulation.
+ */
 public class SiloNetwork {
     private final Grid grid;
     private final Phaser phaser;
@@ -11,7 +20,13 @@ public class SiloNetwork {
     private final List<Stream> inputStreams;
     private final List<Stream> outputStreams;
 
-
+    /**
+     * The constructor initializes the grid, phaser, input and output streams.
+     * @param numRows defines the row size of the grid
+     * @param numCols defines the column size of the grid
+     * @param inputStreams defines the input streams of the siloNetwork
+     * @param outputStreams defines the output streams of the siloNetwork
+     */
     public SiloNetwork(int numRows, int numCols, List<Stream> inputStreams, List<Stream> outputStreams) {
         this.inputStreams = inputStreams;
         this.outputStreams = outputStreams;
@@ -19,12 +34,23 @@ public class SiloNetwork {
         phaser = new Phaser(numRows * numCols );
     }
 
+    /**
+     *  creates and returns a SiloState object, and sets it in the grid.
+     * @param row the row of the silo in the grid
+     * @param col the col of the silo in the grid
+     */
     public SiloState createSilo(int row, int col) {
         SiloState siloState = new SiloState(this, row, col);
         grid.setSilo(row, col, siloState);
         return siloState;
     }
 
+    /**
+     * stopThreads, startSilos, startInputStreams, stopSilos, pauseSilos
+     * and stepSilos are all used to control the flow of the program. These
+     * functions are all triggered using the buttons created in the
+     * AssemblySilosGUI class.
+     */
     public synchronized void stopThreads() {
         for (int r = 0; r < grid.getNumRows(); r++) {
             for (int c = 0; c < grid.getNumCols(); c++) {
@@ -84,6 +110,12 @@ public class SiloNetwork {
         return phaser;
     }
 
+    /**
+     * The receiveValue method handles receiving a value from a silo or stream.
+     * @param r is the row of the silo
+     * @param c is the col of the silo
+     * @param port is where a silo would receive value from
+     */
     public int receiveValue(int r, int c, String port) {
         int value = 0;
         SynchronousQueue<Integer> queue = grid.getQueue(r, c, port);
@@ -101,6 +133,13 @@ public class SiloNetwork {
         return value;
     }
 
+    /**
+     * The sendValue method handles sending a value to a silo or stream.
+     * @param r is the row of the silo
+     * @param c is the col of the silo
+     * @param port is where a silo would receive value from
+     * @param value is the number being sent
+     */
     public void sendValue(int r, int c, String port, int value) throws InterruptedException {
         for (Stream outputStream : outputStreams) {
             if (isSiloNextToStream(r, c, outputStream.getRow(), outputStream.getCol(), port)) {
@@ -119,7 +158,14 @@ public class SiloNetwork {
         queue.put(value);
     }
 
-    //checks if silo is adjacent to stream in the specified direction dir
+    /**
+     * The isSiloNextToStream method checks if a silo is adjacent to a stream in the specified direction.
+     * @param siloRow
+     * @param siloCol
+     * @param streamRow
+     * @param streamCol
+     * @param dir is the specified direction
+     */
     private boolean isSiloNextToStream(int siloRow, int siloCol, int streamRow, int streamCol, String dir) {
         switch (dir) {
             case "UP" -> {
@@ -147,6 +193,9 @@ public class SiloNetwork {
         return outputStreams;
     }
 
+    /**
+     * The stopStreams method stops all input and output streams.
+     */
     public void stopStreams() {
         for (Stream inputStream : inputStreams) {
             inputStream.kill();

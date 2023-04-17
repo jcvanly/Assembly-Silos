@@ -5,13 +5,17 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Parses a program into a list of instructions.
+ * Luke McDougall, Jack Vanlyssel, Spoorthi Menta
+ *
+ * Parses an input file containing a string into a list of instruction objects,
+ * grid dimensions, silo instructions, input streams, and output streams.
  */
 public class Parser {
     private final Map<String, InstructionFactory> instructionFactories;
 
     /**
-     * Creates a new parser.
+     * Creates a new parser and initializes the instructionFactories map,
+     * which maps instruction names to their corresponding factories.
      */
     public Parser() {
         instructionFactories = new HashMap<>();
@@ -31,7 +35,9 @@ public class Parser {
     }
 
     /**
-     * Parses a program into a list of instructions.
+     * The parse method accepts a program as a string and returns a list of Instruction objects.
+     * It first scans the program for labels, then creates the instructions, and finally substitutes
+     * label names with their corresponding instruction indices.
      *
      * @param program the program to parse
      * @return the list of instructions
@@ -84,6 +90,11 @@ public class Parser {
         return instructions;
     }
 
+    /**
+     * substituteLabels is a helper method that replaces label names
+     * in tokens with their corresponding instruction indices. It is
+     * used by InstructionFactory to track the instruction number.
+     */
     private String[] substituteLabels(String[] tokens, Map<String, Label> labels) {
         String[] substitutedTokens = new String[tokens.length];
         for (int i = 0; i < tokens.length; i++) {
@@ -97,17 +108,25 @@ public class Parser {
         return substitutedTokens;
     }
 
+    /**
+     * Creates Instruction objects from an array of tokens.
+     */
     private interface InstructionFactory {
         Instruction create(String[] tokens);
     }
 
+    /**
+     *  InputFileData is a nested class that holds the parsed data from the input file,
+     *  including the grid dimensions, silo instructions, input streams, and output streams.
+     *  It contains functions to get the position of a silo, the instructions given to a silo,
+     *  and the input and output streams of a silo.
+     */
     public class InputFileData {
         private final int numRows;
         private final int numCols;
         private final List<String> siloInstructions;
         private final List<Stream> inputStreams;
         private final List<Stream> outputStreams;
-
         public InputFileData(int numRows, int numCols, List<String> siloInstructions,
                              List<Stream> inputStreams, List<Stream> outputStreams) {
             this.numRows = numRows;
@@ -139,6 +158,12 @@ public class Parser {
 
     }
 
+    /**
+     * parseInputFile is responsible for parsing the input file given a file path.
+     * It reads the file line by line, processing the grid dimensions, input streams,
+     * output streams, and silo instructions. The method returns an InputFileData
+     * object containing the parsed data.
+     */
 
     public InputFileData parseInputFile(String filePath) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
