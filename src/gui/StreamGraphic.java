@@ -40,7 +40,7 @@ public class StreamGraphic extends VBox {
         streamTextArea.setEditable(false);
         streamTextArea.setWrapText(true);
         streamTextArea.setPrefHeight(500);
-        streamTextArea.setPrefWidth(50);
+        streamTextArea.setPrefWidth(80);
 
         streamTextArea.setStyle("-fx-control-inner-background: black; -fx-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-border-color: white;");
         streamLabel.setStyle("-fx-text-fill: white;");
